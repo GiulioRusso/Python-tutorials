@@ -1,56 +1,3 @@
-Welcome to the **Python Tutorial Setup** repository!
-
-🎯 This project is designed to help newcomers learn the basics of installing and configuring Python through step-by-step tutorials and setup guides.
-
-⭐️ If you find these tutorials helpful or have suggestions for improvement, feel free to contribute to this repository, give it a star, and share it.
-
-
-## 🗂️ Table of Contents
-## **Table of Contents**
-
-1. [🐍 What is Python?](#what-is-python)  
-2. [⌨️ Basic Python Commands](#basic-python-commands)  
-3. [🚨 Python3 vs Python2](#python3-vs-python2)  
-4. [🦾 Install Python](#install-python)  
-   - [macOS 🍎](#macos)  
-     - [1. Using the Official Python Installer](#1-using-the-official-python-installer)  
-     - [2. Using Homebrew](#2-using-homebrew)  
-   - [Linux 🐧](#linux)  
-     - [1. Using the Package Manager](#1-using-the-package-manager)  
-     - [2. Building from Source](#2-building-from-source)  
-   - [Windows 🪟](#windows)  
-     - [1. Using the Official Python Installer](#1-using-the-official-python-installer-1)  
-     - [2. Using Microsoft Store](#2-using-microsoft-store)  
-5. [📦 Installing Python Packages](#installing-python-packages)  
-   - [⚙️ Installing `pip`](#installing-pip)  
-   - [⌨️ Basic `pip` Commands](#basic-pip-commands)  
-6. [🌀 Virtual Environments](#virtual-environments)  
-   - [⭐️ Creating a Virtual Environment](#creating-a-virtual-environment)  
-   - [🏁 Activating a Virtual Environment](#activating-a-virtual-environment)  
-   - [📦 Installing Packages in a Virtual Environment](#installing-packages-in-a-virtual-environment)  
-   - [🛑 Deactivating a Virtual Environment](#deactivating-a-virtual-environment)  
-   - [Why Use Virtual Environments?](#why-use-virtual-environments)  
-7. [🐉 Anaconda/Miniconda](#anaconda-miniconda)  
-   - [🔑 Differences Between Anaconda and Miniconda](#differences-between-anaconda-and-miniconda)  
-   - [🔧 Installation Process](#installation-process)  
-   - [⌨️ Basic Conda Commands](#basic-conda-commands)  
-8. [📓 Jupyter Notebooks and JupyterLab 🧪](#jupyter-notebooks-and-jupyterlab)  
-   - [📙 Installing Jupyter Notebook](#installing-jupyter-notebook)  
-   - [🏎️ Running Jupyter Notebook](#running-jupyter-notebook)  
-   - [📒 Installing JupyterLab](#installing-jupyterlab)  
-   - [🛩️ Running JupyterLab](#running-jupyterlab)  
-   - [Choosing Between Jupyter Notebook and JupyterLab 🔀](#choosing-between-jupyter-notebook-and-jupyterlab)  
-9. [🌴 Using PyCharm for Python Projects](#using-pycharm-for-python-projects)  
-   - [1️⃣ Creating a Project with a Virtual Environment](#1-creating-a-project-with-a-virtual-environment)  
-   - [2️⃣ Creating a Project without a Virtual Environment](#creating-a-project-without-a-virtual-environment)  
-10. [🥏 Using Visual Studio Code for Python Projects](#using-visual-studio-code-for-python-projects)  
-    - [1️⃣ Creating a Project with a Virtual Environment](#1-creating-a-project-with-a-virtual-environment-1)  
-    - [2️⃣ Creating a Project without a Virtual Environment](#2-creating-a-project-without-a-virtual-environment-1)
-
-<br>
-<br>
-<br>
-
 # 🐍 What is Python?
 
 Python is a high-level, interpreted programming language widely used in various fields. When working with Python, there are a few key concepts you should understand:
@@ -302,6 +249,22 @@ Anaconda and Miniconda are powerful tools for managing Python environments and d
 2. Run the installer and follow the instructions.
 3. During installation, ensure the option to add conda to the system PATH is selected (optional but useful).
 
+
+## 🛜 Installing Miniconda Remotely
+
+1. Create a directory for Miniconda:
+   ```bash
+   mkdir -p ~/miniconda3
+   ```
+2. Download and install Miniconda:
+   ```bash
+   wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O ~/miniconda3/miniconda.sh
+   bash ~/miniconda3/miniconda.sh -b -u -p ~/miniconda3
+   rm -rf ~/miniconda3/miniconda.sh
+   ~/miniconda3/bin/conda init bash
+   ~/miniconda3/bin/conda init zsh
+   ```
+
 ## ⌨️ Basic Conda Commands
 
 | **Purpose**                              | **Command**                               | **Description**                                                                      |
@@ -441,3 +404,7 @@ Install packages in the activated virtual environment using the **Terminal** tab
 2. Select a global interpreter using **Python: Select Interpreter** from the Command Palette.
 3. All packages installed will use the global Python installation.
 
+<br>
+<br>
+
+[Back to Index 🗂️](./README.md)
