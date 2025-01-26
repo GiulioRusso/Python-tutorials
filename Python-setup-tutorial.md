@@ -158,7 +158,7 @@ Here are some commonly used `pip` commands to manage Python packages:
 
 ### Notes
 1. Avoid using the system-installed Python for development (macOS and Linux already come with a Python interpreter used by the operating system), as it may conflict with system operations.
-2. If managing multiple projects, consider using virtual environments to isolate dependencies.
+2. If managing multiple projects with different package versions, consider using virtual environments to isolate dependencies. When a package is installed, it will be stored along side the Python Interpreter, unless a virtual environment is created and activeted.
 
 <br>
 <br>
@@ -195,7 +195,7 @@ Once activated, the terminal prompt will change to include the name of the virtu
 ```
 
 ## 📦 Installing Packages in a Virtual Environment
-With the virtual environment activated, you can use `pip` to install packages. These will be isolated to the virtual environment:
+With the virtual environment activated, you can use `pip` to install packages. All the packages will be stored inside the active environment and they will not be visible from the other virtual environments:
 ```bash
 pip install <package_name>
 ```
@@ -347,10 +347,15 @@ python3 -m jupyter lab
 1. Open **PyCharm** and select **New Project**.
 2. In the project creation wizard:
    - Under **Location**, specify the project directory.
-   - Check **New environment using Virtualenv**.
+   - Check **New environment** using **Virtualenv** or **Conda**.
    - Configure the **Base Interpreter** (choose a Python executable).
    - Optionally, check **Inherit global site-packages** to access globally installed packages in the virtual environment.
 3. Click **Create**. PyCharm will set up the virtual environment in the project directory (e.g., `my_project/venv`).
+
+<img src="./images/Python-setup-tutorial/pycharm-new-env-python.png" width=500px>
+
+<img src="./images/Python-setup-tutorial/pycharm-new-env-conda.png" width=500px>
+
 
 ### Managing Virtual Environment in PyCharm
 PyCharm automatically activates the virtual environment in its terminal. To manually activate it in the terminal:
@@ -369,8 +374,13 @@ Install packages in the activated virtual environment using the **Terminal** tab
 2. In the project creation wizard:
    - Under **Location**, specify the project directory.
    - Check **Previously configured interpreter**.
-   - Select a global interpreter from the list (e.g., system Python).
+   - Select a global interpreter from the list (e.g., system Python or Conda).
 3. Click **Create**. The project will use the global interpreter.
+
+<img src="./images/Python-setup-tutorial/pycharm-exist-env-python.png" width=500px>
+
+<img src="./images/Python-setup-tutorial/pycharm-exist-env-conda.png" width=500px>
+
 
 <br>
 <br>
@@ -399,10 +409,19 @@ Install packages in the activated virtual environment using the **Terminal** tab
   ```
   Now your code will be executed with the activated environment
 
+<img src="./images/Python-setup-tutorial/create-env-vscode.png" width=500px>
+
+<img src="./images/Python-setup-tutorial/select-env-vscode.png" width=500px>
+
+
+
 ## 2️⃣ Creating a Project without a Virtual Environment
 1. Open a folder in VS Code that contains your project.
 2. Select a global interpreter using **Python: Select Interpreter** from the Command Palette.
 3. All packages installed will use the global Python installation.
+
+<img src="./images/Python-setup-tutorial/select-global-env-vscode.png" width=500px>
+
 
 <br>
 <br>
