@@ -1,3 +1,5 @@
+[Back to Index 🗂️](./README.md)
+
 # 🐍 What is Python?
 
 Python is a high-level, interpreted programming language widely used in various fields. When working with Python, there are a few key concepts you should understand:
@@ -269,14 +271,34 @@ Anaconda and Miniconda are powerful tools for managing Python environments and d
 
 | **Purpose**                              | **Command**                               | **Description**                                                                      |
 |---------------------------------------|-------------------------------------------|--------------------------------------------------------------------------------------|
-| **Create an environment**             | `conda create --name myenv python=3.8`    | Creates a new environment named `myenv` with Python version 3.8.                    |
-| **Activate an environment**           | `conda activate myenv`                    | Activates the environment `myenv`.                                                  |
+| **Create an environment**             | `conda create --name myvenv python=3.8`    | Creates a new environment named `myvenv` with Python version 3.8.                    |
+| **Activate an environment**           | `conda activate myvenv`                    | Activates the environment `myvenv`.                                                  |
 | **Deactivate an environment**         | `conda deactivate`                        | Deactivates the currently active environment.                                       |
-| **Remove an environment**             | `conda env remove --name myenv`           | Deletes the environment `myenv` completely.                                         |
+| **Remove an environment**             | `conda env remove --name myvenv`           | Deletes the environment `myvenv` completely.                                         |
 | **Install a package**                 | `conda install <package_name>`            | Installs a specific package into the active environment.                            |
 | **Check conda version**               | `conda --version`                         | Displays the currently installed version of conda.                                  |
 | **List installed packages**           | `conda list`                              | Lists all packages installed in the active environment.                             |
 | **List all environments**             | `conda env list`                          | Displays all available environments and their locations.                            |
+
+## 🪛 Managing Conda Base Environment
+
+By default, the `base` environment in Conda is activated whenever you open a new terminal. Here are commands to manage this behavior:
+
+-  **Prevent Conda Base Activation by Default**: To prevent the `base` environment from being activated automatically:
+
+    ```bash
+    conda config --set auto_activate_base false
+    ```
+    This ensures that Conda doesn’t activate the `base` environment automatically in new terminals.
+
+- **Show or Hide the `(base)` Prefix**: You can customize whether the `(base)` prefix appears in your terminal prompt. To hide the prefix:
+    ```bash
+    conda config --set changeps1 false
+    ```
+    To show the prefix:
+    ```bash
+    conda config --set changeps1 true
+    ```
 
 <br>
 <br>
