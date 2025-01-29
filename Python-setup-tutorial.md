@@ -282,7 +282,13 @@ Anaconda and Miniconda are powerful tools for managing Python environments and d
 
 ## 🪛 Managing Conda Base Environment
 
-By default, the `base` environment in Conda is activated whenever you open a new terminal. Here are commands to manage this behavior:
+By default, the `base` environment in Conda is activated whenever you open a new terminal.
+
+  ```bash
+  (base) user@machine:~$
+  ```
+
+Here are commands to manage this behavior:
 
 -  **Prevent Conda Base Activation by Default**: To prevent the `base` environment from being activated automatically:
 
