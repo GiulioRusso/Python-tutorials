@@ -7,7 +7,13 @@ Python is a high-level, interpreted programming language widely used in various 
 **1. Virtual Environment (venv)**: A virtual environment is an isolated workspace for Python projects. It allows you to manage dependencies for your project without interfering with the global Python installation or other projects.<br>
 **2. Interpreter**: The Python interpreter is the program that reads and executes Python code. Depending on your setup, the interpreter could refer to the system Python, a version you installed manually, or one inside a virtual environment.<br>
 **3. Script**: A script is a standalone Python file (with a `.py` extension) designed to perform a specific task when executed.<br>
-**4. Jupyter Notebook**: A Jupyter Notebook is an interactive web-based Python environment (with a `.ipynb` extension). It allows you to combine code, text, and visualizations in a single document, making it ideal for data analysis, exploration, and presentation.<br>
+
+  <img src="./images/Python-setup-tutorial/python-file.png" width=400px>
+
+**4. Jupyter Notebook**: A Jupyter Notebook is an interactive web-based Python environment (with a `.ipynb` extension). Jupyter Notebooks are divided into **cells**, which can contain different types of content like Python code, Markdown text, Shell commands etc. Each cell runs independently, but variables persist throughout the notebook session. Cells can be run in any order, but dependencies between them must be managed carefully.<br>
+
+  <img src="./images/Python-setup-tutorial/python-notebook.png" width=400px>
+
 **5. Module**: A module is a Python file that contains reusable code, such as functions or classes, which can be imported into other Python files.<br>
 **6. Package**: A package is a collection of modules organized into a directory structure.<br>
 
@@ -214,7 +220,7 @@ This returns the terminal to the global environment.
 ## Why Use Virtual Environments?
 1. **Dependency Management**: Avoid conflicts between dependencies required by different projects.
 2. **Isolation**: Prevent system-wide changes by containing all packages within the virtual environment.
-3. **Reproducibility**: Simplify sharing and collaboration by including a requirements file (`requirements.txt`) for others to recreate the environment.
+3. **Reproducibility**: Simplify sharing and collaboration for others to recreate the environment.
 
 By using virtual environments, you maintain clean and organized project setups, reducing the risk of dependency issues.
 
@@ -305,6 +311,67 @@ Here are commands to manage this behavior:
     ```bash
     conda config --set changeps1 true
     ```
+
+<br>
+<br>
+<br>
+
+# 📦 Deploying Python Code
+When sharing or deploying Python projects, it is essential to specify dependencies. This ensures that anyone using the code has the correct libraries installed.
+
+## 📜 `requirements.txt` (For Pip-Based Environments)
+A `requirements.txt` file lists the necessary Python packages and their versions. To generate it:
+```bash
+pip3 freeze > requirements.txt
+```
+If writing dependencies manually, ensure you:
+- Specify **package names and versions** to avoid compatibility issues.
+- Keep each dependency on a **new line**.
+- Use version constraints (`==`, `>=`, `<=`) to define exact or flexible versions:
+  ```
+  numpy>=1.21.0  # Any version 1.21 or later
+  scipy<=1.5.4   # Up to version 1.5.4
+  ````
+
+To install dependencies from a `requirements.txt` file:
+```bash
+pip3 install -r requirements.txt
+```
+<br>
+
+Example `requirements.txt`:
+```
+numpy==1.21.0
+pandas==1.3.0
+matplotlib
+```
+
+<br>
+
+## 🛠️ `.yaml` (For Conda-Based Environments)
+A `.yaml` file is used to define dependencies in **Conda environments**. To generate it:
+```bash
+conda env export > environment.yaml
+```
+To recreate an environment from a `.yaml` file:
+```bash
+conda env create -f environment.yaml
+```
+
+<br>
+
+Example `environment.yaml`:
+```yaml
+name: my_env
+channels:
+  - defaults
+  - conda-forge
+dependencies:
+  - python=3.8
+  - numpy
+  - pandas
+  - matplotlib
+```
 
 <br>
 <br>
