@@ -2,7 +2,7 @@
 
 Welcome to the **Python Tutorial** repository!
 
-This project is designed to help newcomers learn various topics about Python programming language using an organized 
+This project is designed to help newcomers learn various topics about Python programming language.
 
 
 ## 🗂️ Table of Contents
