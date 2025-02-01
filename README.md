@@ -9,8 +9,9 @@ This project is designed to help newcomers learn various topics about Python pro
 
 - [🐍 Python setup tutorial](./Python-setup-tutorial.md)
 - [📦 PyPI Guide](./PyPI-Guide.md)
-- 🛜 SSH basics (work in progress)
+- 🔥 PyTorch Parallelization tutorial (work in progress)
 - 🧠 NIfTI Guide (work in progress)
+- 🛜 SSH basics (work in progress)
 
 
 ## 🤝 Contribution
