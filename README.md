@@ -1,4 +1,4 @@
-# 👨‍💻 Python tutorial
+# 👨‍💻 Python tutorials
 
 Welcome to the **Python Tutorial** repository!
 
