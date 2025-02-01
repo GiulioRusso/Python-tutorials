@@ -1,6 +1,6 @@
 # 👨‍💻 Python tutorials
 
-Welcome to the **Python Tutorial** repository!
+Welcome to the **Python tutorials** repository!
 
 This project is designed to help newcomers learn various topics about Python programming language.
 
