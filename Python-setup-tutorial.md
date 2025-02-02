@@ -239,18 +239,8 @@ Anaconda and Miniconda are powerful tools for managing Python environments and d
 ## 🔧 Installation Process
 
 ### macOS/Linux:
-1. Download the installer:
-   - Visit [Miniconda](https://docs.conda.io/projects/miniconda/en/latest/) or [Anaconda](https://www.anaconda.com/) and choose the appropriate installer for your system.
-2. Install Miniconda or Anaconda via terminal:
-   ```bash
-   mkdir -p ~/miniconda3
-   curl -o ~/miniconda3/miniconda.sh https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
-   bash ~/miniconda3/miniconda.sh -b -u -p ~/miniconda3
-   rm -rf ~/miniconda3/miniconda.sh
-   ~/miniconda3/bin/conda init bash
-   ~/miniconda3/bin/conda init zsh
-   ```
-3. Alternatively, use the graphical installer (.pkg for macOS).
+1. Download the installer: Visit [Miniconda](https://docs.conda.io/projects/miniconda/en/latest/) or [Anaconda](https://www.anaconda.com/) and choose the appropriate installer for your system.
+2. Alternatively, use the graphical installer (.pkg for macOS).
 
 ### Windows:
 1. Download the installer from the [official site](https://www.anaconda.com/).
