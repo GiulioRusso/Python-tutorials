@@ -380,19 +380,24 @@ Jupyter Notebooks and JupyterLab are popular tools for interactive programming i
    ```
 2. Install Jupyter Notebook:
    ```bash
-   pip3 install jupyter notebook
+   pip3 install notebook
    ```
 3. To uninstall:
    ```bash
-   pip3 uninstall jupyter notebook
+   pip3 uninstall notebook
    ```
 
 ## 🏎️ Running Jupyter Notebook
-After installation, Jupyter is not automatically added to the system PATH. Launch it with:
+Launch Jupyter Notebook with:
 ```bash
-python3 -m notebook
+cd /path/to/your/project
+source myvenv/bin/activate
+jupyter-notebook
 ```
-This starts a local web server and opens the Jupyter interface in your default browser, allowing you to create, edit, and run `.ipynb` files.
+This starts a local web server and opens the Jupyter interface in your default browser, allowing you to create, edit, and run Python files. The active environment when Jupyter Lab is launched will be the environment active into your project.
+
+<img src="./images/Python-setup-tutorial/jupyter-notebook-1.png" width=500px> <br>
+<img src="./images/Python-setup-tutorial/jupyter-notebook-2.png" width=500px>
 
 ## 📒 Installing JupyterLab
 1. Verify your Python and `pip` installation:
@@ -411,10 +416,16 @@ This starts a local web server and opens the Jupyter interface in your default b
    ```
 
 ## 🛩️ Running JupyterLab
-Launch JupyterLab with:
+Launch Jupyter Lab with:
 ```bash
-python3 -m jupyter lab
+cd /path/to/your/project
+source myvenv/bin/activate
+jupyter-lab
 ```
+This starts a local web server and opens the Jupyter interface in your default browser, allowing you to create, edit, and run Python files. The active environment when Jupyter Lab is launched will be the environment active into your project.
+
+<img src="./images/Python-setup-tutorial/jupyter-lab-1.png" width=500px> <br>
+<img src="./images/Python-setup-tutorial/jupyter-lab-2.png" width=500px>
 
 ### Choosing Between Jupyter Notebook and JupyterLab 🔀
 - **Jupyter Notebook**: Simple interface for smaller projects and quick prototyping.
