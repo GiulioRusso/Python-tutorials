@@ -51,7 +51,7 @@ setup(
 3. Name your token (e.g. "package_upload_token") and create it.
 4. Save the token string "*pypi-...*" securely (e.g. in a password manager). You will need it to upload your package.
 
-## 4. Load your packate on PyPI 🔋
+## 4. Load your package on PyPI 🔋
 
 **Note**: In these steps some packages need to be installed. No matter where these packages will be installed, if inside a local virtual environment or a global one. Make sure that the environment where you install it is the one used in your terminal.
 
