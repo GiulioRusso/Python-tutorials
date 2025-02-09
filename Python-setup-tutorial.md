@@ -172,6 +172,105 @@ Here are some commonly used `pip` commands to manage Python packages:
 <br>
 <br>
 
+# ❌ Remove Python
+
+## via Python Installer
+
+If you installed Python using the Python.org installer, you need to manually remove it from your system.
+
+Run the following command to remove the Python 3.13 installation:
+```bash
+sudo rm -rf /Library/Frameworks/Python.framework/Versions/<your_version>
+```
+
+Python 3.13 may still have symlinks in /usr/local/bin. Run:
+```bash
+ls -l /usr/local/bin | grep python
+```
+
+To delete the version-related links:
+```bash
+sudo rm -f /usr/local/bin/python3.13
+sudo rm -f /usr/local/bin/python3
+sudo rm -f /usr/local/bin/pip3
+```
+
+Verify removal:
+```bash
+python3 --version
+where python3
+```
+
+## via homebrew
+
+Get all the python versions installed:
+```bash
+brew list | grep python
+```
+Uninstall the desired version:
+```bash
+brew uninstall python@3.13
+```
+
+Even after uninstalling, some symlinks may still exist. To remove them:
+```bash
+rm -f /usr/local/bin/python3
+rm -f /usr/local/bin/pip3
+```
+If Homebrew installed Python in /opt/homebrew/bin, remove symlinks there:
+```bash
+rm -f /opt/homebrew/bin/python3
+rm -f /opt/homebrew/bin/pip3
+```
+
+After uninstallation, check which Python versions are still installed:
+```bash
+brew list | grep python
+```
+Then, verify the current active Python version:
+```bash
+python3 --version
+where python3
+```
+
+<br>
+
+### Notes
+When you install a new version of Python on macOS, it automatically becomes the active default version. Let's consider for example we had Python3.9 and now we installed Python3.13. Python3.9 is no longer "active":
+```bash
+which python
+```
+Example output:
+```bash
+/Library/Frameworks/Python.framework/Versions/3.13/bin/python3
+```
+But Python3.9 is still here!
+```bash
+which python3.9
+```
+Example output:
+```bash
+/Library/Frameworks/Python.framework/Versions/3.9/bin/python3
+```
+
+Update Your Shell Configuration File: Add this line to `~/.zshrc` (if using zsh, default in macOS) or `~/.bashrc` (for bash):
+```bash
+export PATH="/usr/local/bin/python3.9:$PATH"
+```
+Apply Changes:
+```bash
+source ~/.zshrc
+```
+Verify the Change:
+```bash
+python3 --version
+```
+It should now point to Python 3.9 instead of 3.13.
+
+<br>
+<br>
+<br>
+
 # 🌀 Virtual Environments
 
 Virtual environments allow you to create isolated Python environments for projects, ensuring that dependencies do not conflict with each other or with the system Python installation. This is especially useful when working on multiple projects with different package requirements.
