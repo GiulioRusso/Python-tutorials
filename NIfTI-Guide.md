@@ -18,6 +18,13 @@ The .nii.gz file is a compressed version of the NIfTI format. NIfTI files store 
     - First 3x3 submatrix: Rotation and scaling.
     - Last column: Translation vector maps voxel coordinates to world coordinates in millimeters
 
+<br>
+<img src="./images/NIfTI-Guide/slice-info.png" width=300px>
+<br>
+<img src="./images/NIfTI-Guide/volume-info.png" width=300px>
+<br>
+<br>
+
 **2. Data**: The actual image data, stored in a multi-dimensional array.<br>
 
 **3. Compression**: The .gz compression ensures smaller file sizes while maintaining the integrity of the data. When working with `.nii.gz` files, the compression method used can vary. This affects how tools interpret the file structure. Running:
