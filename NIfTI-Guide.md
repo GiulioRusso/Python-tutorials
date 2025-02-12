@@ -398,6 +398,120 @@ nib.save(padded_img, output_path)
 print(f"Padded bounding box saved to {output_path}")
 ```
 
+### 🏁 Resampling Guide
+
+Before resampling a NIfTI image, it is important to extract key metadata such as size, spacing, origin, and direction. SimpleITK provides various functions to retrieve these properties:
+- **`GetImageFromArray(arr)`**: Returns a sitk image from numpy array.
+- **`GetSize()`**: Retrieves the voxel count in each dimension.
+- **`GetSpacing()`**: Returns the physical spacing between voxels.
+- **`GetOrigin()`**: Specifies the physical location of the first voxel.
+- **`GetDirection()`**: Defines the image orientation in world coordinates.
+- **`Resample()`**: Adjusts image resolution and spacing while maintaining alignment.
+
+<br>
+
+```python
+import SimpleITK as sitk
+
+# Load the NIfTI image
+image = sitk.ReadImage("toy-CTA.nii.gz")
+
+# Get the image size (number of voxels in each dimension)
+size = image.GetSize()  # Output: (Width, Height, Depth)
+
+# Get the voxel spacing (physical size of each voxel in mm)
+spacing = image.GetSpacing()  # Output: (SpacingX, SpacingY, SpacingZ)
+
+# Get the image origin (physical coordinates of the first voxel)
+origin = image.GetOrigin()
+
+# Get the image direction (orientation of the image in physical space)
+direction = image.GetDirection()
+
+# Get the pixel type (data type of the image)
+pixel_type = image.GetPixelID()
+
+# Print information
+print(f"Size: {size}")
+print(f"Spacing: {spacing}")
+print(f"Origin: {origin}")
+print(f"Direction: {direction}")
+print(f"Pixel Type: {pixel_type}")
+```
+
+When resampling an image, we want to adjust one dimension of the image (e.g., the Z-dimension, number of slices) while maintaining the field of view. To do this, we compute the new spacing along the dimension to resample:
+
+```python
+# Define the target number of slices (e.g., 320 slices)
+target_z_size = 320
+
+# Compute new Z-spacing to maintain the same field of view
+new_z_spacing = (spacing[2] * size[2]) / target_z_size
+new_spacing = (spacing[0], spacing[1], new_z_spacing)
+
+print(f"New Spacing: {new_spacing}")
+```
+
+To resample a CTA image, we use `sitk.Resample()`, ensuring that the other dimensions remain unchanged while adjusting the desired axis. Different interpolation methods exist:
+
+
+| Interpolation Method       | Description | Best Used For |
+|---------------------------|-------------|--------------|
+| `sitk.sitkNearestNeighbor` | Keeps values strictly 0 or 1 | Binary masks or annotations |
+| `sitk.sitkLinear`          | Fast, but may introduce slight blurring | General-purpose resampling |
+| `sitk.sitkBSpline`         | Smooth interpolation, preserves details | High-quality medical images |
+
+
+
+```python
+def resample_cta(image: sitk.Image, new_z_size=512):
+    """
+    Resamples a CTA scan to have a uniform number of slices along Z while keeping X-Y unchanged.
+    
+    Parameters:
+    - image (sitk.Image): Input CTA image.
+    - new_z_size (int): Target number of slices.
+    
+    Returns:
+    - resampled_img (sitk.Image): Resampled image.
+    """
+    original_size = image.GetSize()
+    original_spacing = image.GetSpacing()
+    
+    # Compute new Z spacing
+    new_z_spacing = (original_spacing[2] * original_size[2]) / new_z_size
+    new_spacing = (original_spacing[0], original_spacing[1], new_z_spacing)
+    
+    # Define new size, keeping X and Y the same
+    new_size = [original_size[0], original_size[1], new_z_size]
+    
+    # Resample the image
+    resampled_img = sitk.Resample(
+        image,
+        new_size,
+        sitk.Transform(),  # Identity transform to prevent shifting
+        sitk.sitkBSpline,  # Interpolation method for smooth results
+        image.GetOrigin(),
+        new_spacing,
+        image.GetDirection(),
+        0,  # Background fill value
+        image.GetPixelID()
+    )
+
+    # To ensure the image does not shift during resampling, always preserve the origin and direction
+    resampled_image.SetOrigin(image.GetOrigin())
+    resampled_image.SetSpacing(new_spacing)
+    resampled_image.SetDirection(image.GetDirection())
+    
+    return resampled_img
+
+# Example usage
+image = sitk.ReadImage("toy-CTA.nii.gz")
+resampled_image = resample_cta(image)
+sitk.WriteImage(resampled_image, "toy-CTA-resampled.nii.gz")
+```
+
+
 <br>
 <br>
 
