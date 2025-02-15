@@ -174,102 +174,119 @@ Here are some commonly used `pip` commands to manage Python packages:
 
 # ❌ Remove Python
 
-## via Python Installer
 
-If you installed Python using the Python.org installer, you need to manually remove it from your system.
-
-Run the following command to remove the Python 3.13 installation:
+### macOS 🍎
+#### via Python Installer
+If you installed Python using the Python.org installer, manually remove it:
 ```bash
 sudo rm -rf /Library/Frameworks/Python.framework/Versions/<your_version>
 ```
-
-Python 3.13 may still have symlinks in /usr/local/bin. Run:
+Check for symlinks:
 ```bash
 ls -l /usr/local/bin | grep python
 ```
-
-To delete the version-related links:
+Remove symlinks:
 ```bash
 sudo rm -f /usr/local/bin/python3.13
 sudo rm -f /usr/local/bin/python3
 sudo rm -f /usr/local/bin/pip3
 ```
-
 Verify removal:
 ```bash
 python3 --version
 where python3
 ```
 
-## via homebrew
-
-Get all the python versions installed:
+#### via Homebrew
+List installed Python versions:
 ```bash
 brew list | grep python
 ```
-Uninstall the desired version:
+Uninstall:
 ```bash
-brew uninstall python@3.13
+brew uninstall python@<version>
 ```
-
-Even after uninstalling, some symlinks may still exist. To remove them:
+Remove remaining symlinks:
 ```bash
 rm -f /usr/local/bin/python3
 rm -f /usr/local/bin/pip3
 ```
-If Homebrew installed Python in /opt/homebrew/bin, remove symlinks there:
+Check if installed in `/opt/homebrew/bin`:
 ```bash
 rm -f /opt/homebrew/bin/python3
 rm -f /opt/homebrew/bin/pip3
 ```
-
-After uninstallation, check which Python versions are still installed:
+Verify:
 ```bash
 brew list | grep python
-```
-Then, verify the current active Python version:
-```bash
 python3 --version
 where python3
 ```
 
+### Windows 🪟
+#### via Windows Installer
+If installed via the Python.org installer:
+1. Open **Control Panel ➡️ Programs ➡️ Programs and Features**.
+2. Locate **Python X.X**.
+3. Click **Uninstall**.
+
+Alternatively, remove it via PowerShell:
+```powershell
+Get-Package -Name Python* | Uninstall-Package
+```
+Check Python installation path:
+```powershell
+where python
+```
+Manually remove folders (if necessary):
+```powershell
+Remove-Item -Recurse -Force "C:\Users\<YourUsername>\AppData\Local\Programs\Python"
+Remove-Item -Recurse -Force "C:\Program Files\Python*"
+```
+
+### 🐧 Linux
+#### via Package Manager
+For Debian-based systems (Ubuntu, Debian):
+```bash
+sudo apt-get remove --purge python3.x
+sudo apt autoremove
+```
+For Red Hat-based systems (Fedora, CentOS):
+```bash
+sudo dnf remove python3.x
+```
+Check if Python is still installed:
+```bash
+python3 --version
+which python3
+```
+
 <br>
 
-### Notes
-When you install a new version of Python on macOS, it automatically becomes the active default version. Let's consider for example we had Python3.9 and now we installed Python3.13. Python3.9 is no longer "active":
-```bash
-which python
-```
-Example output:
-```bash
-/Library/Frameworks/Python.framework/Versions/3.13/bin/python3
-```
-But Python3.9 is still here!
-```bash
-which python3.9
-```
-Example output:
-```bash
-/Library/Frameworks/Python.framework/Versions/3.9/bin/python3
-```
-
-Update Your Shell Configuration File: Add this line to `~/.zshrc` (if using zsh, default in macOS) or `~/.bashrc` (for bash):
+## 🔄 Switching Between Installed Python Versions
+On **macOS/Linux**, update your shell configuration file:
 ```bash
 export PATH="/usr/local/bin/python3.9:$PATH"
 ```
-Apply Changes:
+Apply changes:
 ```bash
-source ~/.zshrc
+source ~/.zshrc  # or source ~/.bashrc
 ```
-Verify the Change:
+Verify the change:
 ```bash
 python3 --version
 ```
-It should now point to Python 3.9 instead of 3.13.
+On **Windows**, modify the system environment variables:
+1. Search **"Environment Variables"**.
+2. Edit **PATH** and move the desired Python version to the top.
+3. Restart the terminal and check with:
+```powershell
+python --version
+```
 
 <br>
 <br>
-<br>
+
 
 # 🌀 Virtual Environments
 
