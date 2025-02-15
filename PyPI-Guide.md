@@ -92,6 +92,9 @@ and trying to use it in a separate Python project. You can always check if a pac
 6. Check that your package is listed on your PyPI account.
 
 <br>
+
+**Note**: When you need to update your package, just add the new/modified code and repeat the steps `2.` (build the new package version) and `4.` (upload the new build). Note that it could be needed to delete the old version builds from your `dist` folder.
+
 <br>
 
 [Back to Index 🗂️](./README.md)
