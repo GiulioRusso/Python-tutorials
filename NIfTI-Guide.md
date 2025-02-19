@@ -800,6 +800,37 @@ fslmaths input.nii.gz -thr 100 -bin thresholded_mask.nii.gz
 
 <br>
 
+### 🔨Skulling pipeline
+Here a CTA skulling pipeline example:
+
+1️. Crop the Field of View (FOV) to focus on the brain. CTA scans often include the neck and skull base, which interfere with BET.
+```bash
+robustfov -i input.nii.gz -r input_fov.nii.gz
+```
+
+2️. Intensity Clipping & Smoothing (CTA images may have high contrast regions like bones or vessels, that can interfere with skull stripping). Reduces noise and sharp intensity transitions, helping BET detect the brain boundary better. Clips intensities again after smoothing (ensures intensity values stay in [0,100]).
+```bash
+fslmaths input_fov.nii.gz -thr 0 -uthr 100  input_th.nii.gz
+fslmaths input_th.nii.gz -s 1  input_th_sm.nii.gz
+fslmaths input_th_sm.nii.gz -thr 0 -uthr 100  input_th_sm_th.nii.gz
+```
+
+3. Brain Extraction Using BET.
+```bash
+bet input_th_sm_th input_brain_sm -R -f 0.1 -g 0 -m
+```
+Uses: <br>
+`-R` → Robust brain center estimation (recommended for non-MR images like CTA).<br>
+`-f 0.1` → More conservative skull stripping (keeps more peripheral brain tissue).<br>
+`-g 0` → No vertical gradient applied.<br>
+`-m` → Saves the binary brain mask (*_mask.nii.gz).<br>
+
+4. Apply the Extracted Brain Mask to the Original CTA
+    ```bash
+    fslmaths input_fov.nii.gz -mul input_brain_sm_mask.nii.gz input_brain.nii.gz
+    ```
+
+
 ## ℹ️ FSL Wiki
 
 For more information, visit the [FSL Wiki](https://fsl.fmrib.ox.ac.uk/fsl/fslwiki).
