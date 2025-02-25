@@ -1,6 +1,6 @@
 [Back to Index 🗂️](./README.md)
 
-# 🐍 What is Python?
+<center><h1>🐍 What is Python?</h1></center>
 
 Python is a high-level, interpreted programming language widely used in various fields. When working with Python, there are a few key concepts you should understand:
 
@@ -17,6 +17,8 @@ Python is a high-level, interpreted programming language widely used in various 
 **5. Module**: A module is a Python file that contains reusable code, such as functions or classes, which can be imported into other Python files.<br>
 **6. Package**: A package is a collection of modules organized into a directory structure.<br>
 
+<br>
+
 ## ⌨️ Basic Python Commands
 
 Below is a table summarizing essential Python commands and their differences across macOS, Linux, and Windows:
@@ -27,6 +29,8 @@ Below is a table summarizing essential Python commands and their differences acr
 | Find the path of the active Python interpreter | `which python3`          | `which python3`          | `where python3`         |
 | Locate all paths of Python 3 | `where python3`          | `where python3`          |                        |
 | Run a Python script        | `python3 your_script.py` | `python3 your_script.py` | `py your_script.py`     |
+
+<br>
 
 ## 🚨 Python3 vs Python2
 
@@ -57,9 +61,11 @@ Be cautious with this change, as some older scripts may require `python` to refe
 <br>
 <br>
 
-# 🦾 Install Python
+<center><h1>🦾 Install Python</h1></center>
 
 It is recommended to avoid using the system Python for development. Instead, install a separate version of Python to avoid conflicts. Python can be installed on macOS, Linux, and Windows using different methods.
+
+<br>
 
 ## macOS 🍎
 
@@ -85,6 +91,8 @@ It is recommended to avoid using the system Python for development. Instead, ins
   ```bash
   python3 --version
   ```
+
+<br>
 
 ## Linux 🐧
 
@@ -114,6 +122,7 @@ It is recommended to avoid using the system Python for development. Instead, ins
   python3 --version
   ```
 
+<br>
 
 ## Windows 🪟
 
@@ -138,9 +147,11 @@ It is recommended to avoid using the system Python for development. Instead, ins
 <br>
 <br>
 
-# 📦 Installing Python Packages
+<center><h1>📦 Installing Python Packages</h1></center>
 
 Python includes `pip`, the default package installer, which simplifies the process of managing additional libraries and dependencies. Typically, `pip` is installed alongside Python, but if it's missing, you can install it manually:
+
+<br>
 
 ## ⚙️ Installing `pip`
 To install `pip`, download and run the `get-pip.py` script from the official site:
@@ -148,12 +159,14 @@ To install `pip`, download and run the `get-pip.py` script from the official sit
 python3 get-pip.py
 ```
 
+<br>
+
 ## ⌨️ Basic `pip` Commands
 Here are some commonly used `pip` commands to manage Python packages:
 
-| **Command**                    | **Purpose**                                        |
+| **Command**                    | **Purpose**                                      |
 |--------------------------------|--------------------------------------------------|
-| `pip3 --version` or `pip3 -V`              | Check the installed version of `pip`.            |
+| `pip3 --version` or `pip3 -V`  | Check the installed version of `pip`.            |
 | `pip3 list`                    | List all installed Python packages.              |
 | `pip3 install <package_name>`  | Install a specific Python package.               |
 | `pip3 uninstall <package_name>`| Uninstall a specific Python package.             |
@@ -162,7 +175,7 @@ Here are some commonly used `pip` commands to manage Python packages:
 | `which pip3`                   | Locate the `pip3` executable path (macOS/Linux). |
 | `where pip3`                   | Locate all paths to `pip3` (Windows).            |
 
----
+<br>
 
 ### Notes
 1. Avoid using the system-installed Python for development (macOS and Linux already come with a Python interpreter used by the operating system), as it may conflict with system operations.
@@ -172,11 +185,13 @@ Here are some commonly used `pip` commands to manage Python packages:
 <br>
 <br>
 
-# ❌ Remove Python
+<center><h1>❌ Remove Python</h1></center>
 
+<br>
 
-### macOS 🍎
-#### via Python Installer
+## macOS 🍎:
+
+### 1. via Python Installer
 If you installed Python using the Python.org installer, manually remove it:
 ```bash
 sudo rm -rf /Library/Frameworks/Python.framework/Versions/<your_version>
@@ -197,7 +212,7 @@ python3 --version
 where python3
 ```
 
-#### via Homebrew
+### 2. via Homebrew
 List installed Python versions:
 ```bash
 brew list | grep python
@@ -223,8 +238,11 @@ python3 --version
 where python3
 ```
 
-### Windows 🪟
-#### via Windows Installer
+<br>
+
+## Windows 🪟:
+
+### 1. via Windows Installer
 If installed via the Python.org installer:
 1. Open **Control Panel ➡️ Programs ➡️ Programs and Features**.
 2. Locate **Python X.X**.
@@ -244,8 +262,11 @@ Remove-Item -Recurse -Force "C:\Users\<YourUsername>\AppData\Local\Programs\Pyth
 Remove-Item -Recurse -Force "C:\Program Files\Python*"
 ```
 
-### 🐧 Linux
-#### via Package Manager
+<br>
+
+## 🐧 Linux
+
+### 1. via Package Manager
 For Debian-based systems (Ubuntu, Debian):
 ```bash
 sudo apt-get remove --purge python3.x
@@ -262,8 +283,11 @@ which python3
 ```
 
 <br>
+<br>
+<br>
 
-## 🔄 Switching Between Installed Python Versions
+<center><h1>🔄 Switching Between Installed Python Versions</h1></center>
+
 On **macOS/Linux**, update your shell configuration file:
 ```bash
 export PATH="/usr/local/bin/python3.9:$PATH"
@@ -286,11 +310,14 @@ python --version
 
 <br>
 <br>
+<br>
 
 
-# 🌀 Virtual Environments
+<center><h1>🌀 Virtual Environments</h1></center>
 
 Virtual environments allow you to create isolated Python environments for projects, ensuring that dependencies do not conflict with each other or with the system Python installation. This is especially useful when working on multiple projects with different package requirements.
+
+<br>
 
 ## ⭐️ Creating a Virtual Environment
 1. Navigate to your project directory or specify a desired location:
@@ -301,6 +328,8 @@ Virtual environments allow you to create isolated Python environments for projec
    ```bash
    python3.x -m venv /path/to/project/myvenv
    ```
+
+<br>
 
 ## 🏁 Activating a Virtual Environment
 To use the virtual environment, activate it:
@@ -318,11 +347,15 @@ Once activated, the terminal prompt will change to include the name of the virtu
 (myvenv) user@machine:~$
 ```
 
+<br>
+
 ## 📦 Installing Packages in a Virtual Environment
 With the virtual environment activated, you can use `pip` to install packages. All the packages will be stored inside the active environment and they will not be visible from the other virtual environments:
 ```bash
 pip install <package_name>
 ```
+
+<br>
 
 ## 🛑 Deactivating a Virtual Environment
 When you are done working, deactivate the environment:
@@ -344,13 +377,17 @@ By using virtual environments, you maintain clean and organized project setups, 
 <br>
 <br>
 
-# 🐉 Anaconda/Miniconda
+<center><h1>🐉 Anaconda/Miniconda</h1></center>
 
 Anaconda and Miniconda are powerful tools for managing Python environments and dependencies. They allow the creation of isolated environments for different projects without interfering with your system Python installation.
+
+<br>
 
 ## 🔑 Differences Between Anaconda and Miniconda
 - **Anaconda**: A larger distribution that includes Python, conda, and many pre-installed data science libraries.
 - **Miniconda**: A minimal installation that includes Python and conda, with fewer pre-installed libraries, providing more flexibility.
+
+<br>
 
 ## 🔧 Installation Process
 
@@ -363,6 +400,7 @@ Anaconda and Miniconda are powerful tools for managing Python environments and d
 2. Run the installer and follow the instructions.
 3. During installation, ensure the option to add conda to the system PATH is selected (optional but useful).
 
+<br>
 
 ## 🛜 Installing Miniconda Remotely
 
@@ -379,6 +417,8 @@ Anaconda and Miniconda are powerful tools for managing Python environments and d
    ~/miniconda3/bin/conda init zsh
    ```
 
+<br>
+
 ## ⌨️ Basic Conda Commands
 
 | **Purpose**                              | **Command**                               | **Description**                                                                      |
@@ -391,6 +431,8 @@ Anaconda and Miniconda are powerful tools for managing Python environments and d
 | **Check conda version**               | `conda --version`                         | Displays the currently installed version of conda.                                  |
 | **List installed packages**           | `conda list`                              | Lists all packages installed in the active environment.                             |
 | **List all environments**             | `conda env list`                          | Displays all available environments and their locations.                            |
+
+<br>
 
 ## 🪛 Managing Conda Base Environment
 
@@ -422,8 +464,10 @@ Here are commands to manage this behavior:
 <br>
 <br>
 
-# 📦 Deploying Python Code
+<center><h1>📦 Deploying Python Code</h1></center>
 When sharing or deploying Python projects, it is essential to specify dependencies. This ensures that anyone using the code has the correct libraries installed.
+
+<br>
 
 ## 📜 `requirements.txt` (For Pip-Based Environments)
 A `requirements.txt` file lists the necessary Python packages and their versions. To generate it:
@@ -443,6 +487,7 @@ To install dependencies from a `requirements.txt` file:
 ```bash
 pip3 install -r requirements.txt
 ```
+
 <br>
 
 Example `requirements.txt`:
@@ -483,9 +528,11 @@ dependencies:
 <br>
 <br>
 
-# 📓 Jupyter Notebooks and JupyterLab 🧪
+<center><h1>📓 Jupyter Notebooks and JupyterLab 🧪</h1></center>
 
 Jupyter Notebooks and JupyterLab are popular tools for interactive programming in Python, especially for data analysis, visualization, and exploration.
+
+<br>
 
 ## 📙 Installing Jupyter Notebook
 1. Verify your Python and `pip` installation:
@@ -503,6 +550,8 @@ Jupyter Notebooks and JupyterLab are popular tools for interactive programming i
    pip3 uninstall notebook
    ```
 
+<br>
+
 ## 🏎️ Running Jupyter Notebook
 Launch Jupyter Notebook with:
 ```bash
@@ -514,6 +563,8 @@ This starts a local web server and opens the Jupyter interface in your default b
 
 <img src="./images/Python-setup-tutorial/jupyter-notebook-1.png" width=500px> <br>
 <img src="./images/Python-setup-tutorial/jupyter-notebook-2.png" width=500px>
+
+<br>
 
 ## 📒 Installing JupyterLab
 1. Verify your Python and `pip` installation:
@@ -531,6 +582,8 @@ This starts a local web server and opens the Jupyter interface in your default b
    pip3 uninstall jupyterlab
    ```
 
+<br>
+
 ## 🛩️ Running JupyterLab
 Launch Jupyter Lab with:
 ```bash
@@ -540,8 +593,11 @@ jupyter-lab
 ```
 This starts a local web server and opens the Jupyter interface in your default browser, allowing you to create, edit, and run Python files. The active environment when Jupyter Lab is launched will be the environment active into your project.
 
-<img src="./images/Python-setup-tutorial/jupyter-lab-1.png" width=500px> <br>
+<img src="./images/Python-setup-tutorial/jupyter-lab-1.png" width=500px>
+<br>
 <img src="./images/Python-setup-tutorial/jupyter-lab-2.png" width=500px>
+
+<br>
 
 ### Choosing Between Jupyter Notebook and JupyterLab 🔀
 - **Jupyter Notebook**: Simple interface for smaller projects and quick prototyping.
@@ -551,9 +607,11 @@ This starts a local web server and opens the Jupyter interface in your default b
 <br>
 <br>
 
-# 🌴 Using PyCharm for Python Projects
+<center><h1>🌴 Using PyCharm for Python Projects</h1></center>
 
 [PyCharm Download](https://www.jetbrains.com/pycharm/download/)
+
+<br>
 
 ## 1️⃣ Creating a Project with a Virtual Environment
 1. Open **PyCharm** and select **New Project**.
@@ -565,9 +623,10 @@ This starts a local web server and opens the Jupyter interface in your default b
 3. Click **Create**. PyCharm will set up the virtual environment in the project directory (e.g., `my_project/venv`).
 
 <img src="./images/Python-setup-tutorial/pycharm-new-env-python.png" width=500px>
-
+<br>
 <img src="./images/Python-setup-tutorial/pycharm-new-env-conda.png" width=500px>
 
+<br>
 
 ### Managing Virtual Environment in PyCharm
 PyCharm automatically activates the virtual environment in its terminal. To manually activate it in the terminal:
@@ -581,6 +640,9 @@ PyCharm automatically activates the virtual environment in its terminal. To manu
   ```
 Install packages in the activated virtual environment using the **Terminal** tab or **PyCharm's package manager**.
 
+<br>
+
+
 ## 2️⃣ Creating a Project without a Virtual Environment
 1. Open **PyCharm** and select **New Project**.
 2. In the project creation wizard:
@@ -590,7 +652,7 @@ Install packages in the activated virtual environment using the **Terminal** tab
 3. Click **Create**. The project will use the global interpreter.
 
 <img src="./images/Python-setup-tutorial/pycharm-exist-env-python.png" width=500px>
-
+<br>
 <img src="./images/Python-setup-tutorial/pycharm-exist-env-conda.png" width=500px>
 
 
@@ -598,9 +660,11 @@ Install packages in the activated virtual environment using the **Terminal** tab
 <br>
 <br>
 
-# 🥏 Using Visual Studio Code for Python Projects
+<center><h1>🥏 Using Visual Studio Code for Python Projects</h1></center>
 
 [Visual Studio Code Download](https://code.visualstudio.com/download)
+
+<br>
 
 ## 1️⃣ Creating a Project with a Virtual Environment
 1. **Create a Virtual Environment** in your project directory:
@@ -622,10 +686,10 @@ Install packages in the activated virtual environment using the **Terminal** tab
   Now your code will be executed with the activated environment
 
 <img src="./images/Python-setup-tutorial/create-env-vscode.png" width=500px>
-
+<br>
 <img src="./images/Python-setup-tutorial/select-env-vscode.png" width=500px>
 
-
+<br>
 
 ## 2️⃣ Creating a Project without a Virtual Environment
 1. Open a folder in VS Code that contains your project.
@@ -635,6 +699,7 @@ Install packages in the activated virtual environment using the **Terminal** tab
 <img src="./images/Python-setup-tutorial/select-global-env-vscode.png" width=500px>
 
 
+<br>
 <br>
 <br>
 

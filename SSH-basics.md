@@ -1,6 +1,6 @@
 [Back to Index 🗂️](./README.md)
 
-# 🛜 SSH Guide
+<center><h1>🛜 SSH Guide</h1></center>
 
 SSH (Secure Shell) is a protocol that allows you to connect to another computer (typically a server) over the network. For example, it’s often used to access remote servers with GPUs to run deep learning experiments.
 
@@ -58,7 +58,7 @@ SSH keys allow password-less login and are recommended for secure connections. B
    ssh username@server
    ```
 
-### Windows 🖥️
+### Windows 🖥️:
 
 1. Install [Git for Windows](https://git-scm.com/) or [OpenSSH](https://docs.microsoft.com/en-us/windows-server/administration/openssh/openssh_install_firstuse) to use SSH.
 2. Open PowerShell or Git Bash.
@@ -89,8 +89,9 @@ To disconnect from the server:
 
 <br>
 <br>
+<br>
 
-# 🦆 Cyberduck 
+<center><h1>🦆 Cyberduck</h1></center>
 
 Cyberduck simplifies remote file management without using Linux commands.
 
@@ -113,8 +114,10 @@ Cyberduck simplifies remote file management without using Linux commands.
 Note: Use `Command + R` to refresh files when changes are not immediately visible.
 
 <br>
+<br>
+<br>
 
-# 🐍 PyCharm
+<center><h1>🐍 PyCharm</h1></center>
 
 ## 1️⃣ Setting Up a Remote Interpreter
 
@@ -136,6 +139,7 @@ Note: Use `Command + R` to refresh files when changes are not immediately visibl
 4. Follow the steps to verify authentication.
 
    <img src="./images/SSH-Guide/remote-interpreter-pycharm-4.png" width=500px>
+   <br>
    <img src="./images/SSH-Guide/remote-interpreter-pycharm-5.png" width=500px>
 
 Select the appropriate Python environment or System interpreter path on the Server:
@@ -152,6 +156,8 @@ Select the appropriate Python environment or System interpreter path on the Serv
 
    In case you use Conda, specify the path to the base environment interpreter, or any other interpreter of a specific virtual environment: <br>
    <img src="./images/SSH-Guide/remote-interpreter-pycharm-8.png" width=500px>
+
+<br>
 
 ## 2️⃣ Deployment on Remote Server
 
@@ -177,13 +183,19 @@ To upload files to a remote server:
 
    Also, you can select the option `Automatic Upload` in `Tools` that will load every modification directly on the Server.
 
+<br>
+
 ### 🚨 Pay Attention
 
 If a content is uploaded to the Server, but deleted on your local project, this will NOT be deleted also on the Server. In this case you will need to delete the content also on the Server.
 
 <br>
+<br>
+<br>
 
-# 🥏 Visual Studio Code Remote SSH
+<center><h1>🥏 Visual Studio Code Remote</h1></center>
+
+<br>
 
 1. Install the **Remote SSH** extension.
 
@@ -206,8 +218,12 @@ If a content is uploaded to the Server, but deleted on your local project, this 
    <img src="./images/SSH-Guide/remote-interpreter-vscode-3.png" width=500px>
 
 <br>
+<br>
+<br>
 
-# 📟 Background Sessions
+<center><h1>📟 Background Sessions</h1></center>
+
+<br>
 
 ## ⚒️ Using `tmux` for Persistent Sessions
 
@@ -233,6 +249,7 @@ Run even after disconnecting and redirecting the output:
    nohup sh ./script.sh > output.log &
    ```
 
+<br>
 <br>
 <br>
 

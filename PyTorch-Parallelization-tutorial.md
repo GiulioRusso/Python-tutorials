@@ -1,9 +1,11 @@
 [Back to Index 🗂️](./README.md)
 
-# 🔥 PyTorch Parallelization tutorial
+<center><h1>🔥 PyTorch Parallelization tutorial</h1></center>
 
-This guide focuses on **leveraging parallelization in PyTorch** to maximize computational efficiency using **GPUs and multi-core CPUs**.
+This guide focuses on leveraging parallelization in PyTorch to maximize computational efficiency using GPUs and multi-core CPUs.
 
+<br>
+<br>
 <br>
 
 ## ✅ Ensuring Reproducibility
@@ -22,6 +24,8 @@ def set_seed(seed: int):
 set_seed(42)  # Example seed
 ```
 
+<br>
+<br>
 <br>
 
 ## 📊 GPU Monitoring (Check Memory & Usage)
@@ -58,6 +62,8 @@ kill -9 <PID>  # Force kill
 ```
 
 <br>
+<br>
+<br>
 
 ## 🎛️ Using a GPU in PyTorch
 To utilize GPU acceleration, move tensors and models to the GPU.
@@ -89,6 +95,8 @@ tensor = tensor.to(device)
 result = tensor * 2
 ```
 
+<br>
+<br>
 <br>
 
 ## 🏗️ Multi-GPU Training
@@ -132,6 +140,8 @@ model = DDP(MyModel().to(device))
 | Scalability              | Limited for large models       | Recommended for multi-node/multi-GPU |
 
 
+<br>
+<br>
 <br>
 
 ## 🔀 Choosing GPUs for Computation
@@ -181,6 +191,8 @@ This ensures consistent device numbering across multiple runs, avoiding mismatch
 
 
 <br>
+<br>
+<br>
 
 ## ⚙️ Multi-Core CPU Processing
 
@@ -206,6 +218,8 @@ dataloader = DataLoader(
 )
 ```
 
+<br>
+<br>
 <br>
 
 [Back to Index 🗂️](./README.md)

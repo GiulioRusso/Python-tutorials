@@ -1,12 +1,16 @@
 [Back to Index 🗂️](./README.md)
 
-# 📦 Create a Python package installable via PyPI
+<center><h1>📦 Create a Python package installable via PyPI</h1></center>
+
+<br>
 
 ## 1. PyPI account 👤
 1. Create a PyPI account at: https://pypi.org
 2. Add a second email as backup option.
 3. Save the Recovery codes.
 4. Activate the Two Factor Authentication.
+
+<br>
 
 ## 2. Local package project 📂
 1. Organize your package directory in the following format:
@@ -45,11 +49,15 @@ setup(
 )
 ```
 
+<br>
+
 ## 3. Create API Token 🔑
 1. Log in to your PyPI account and navigate to your account settings.
 2. Under "API tokens," click "Add API token".
 3. Name your token (e.g. "package_upload_token") and create it.
 4. Save the token string "*pypi-...*" securely (e.g. in a password manager). You will need it to upload your package.
+
+<br>
 
 ## 4. Load your package on PyPI 🔋
 
@@ -95,6 +103,8 @@ and trying to use it in a separate Python project. You can always check if a pac
 
 **Note**: When you need to update your package, just add the new/modified code and repeat the steps `2.` (build the new package version) and `4.` (upload the new build). Note that it could be needed to delete the old version builds from your `dist` folder.
 
+<br>
+<br>
 <br>
 
 [Back to Index 🗂️](./README.md)
