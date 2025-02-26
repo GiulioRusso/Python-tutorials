@@ -1031,7 +1031,7 @@ To resample a CTA image, we use `sitk.Resample()`, ensuring that the other dimen
 
 
 ```python
-def resample_cta_pipeline(image: sitk.Image, new_z_size=512):
+def resample_pipeline(image: sitk.Image, new_z_size=512):
     """
     Resamples a CTA scan to have a uniform number of slices along Z while keeping X-Y unchanged.
     
@@ -1074,7 +1074,7 @@ def resample_cta_pipeline(image: sitk.Image, new_z_size=512):
 
 # Example usage
 image = sitk.ReadImage("toy-CTA.nii.gz")
-resampled_image = resample_cta(image)
+resampled_image = resample_pipeline(image)
 sitk.WriteImage(resampled_image, "toy-CTA-resampled.nii.gz")
 ```
 
@@ -1154,10 +1154,10 @@ resample_template(input_template_path, output_template_path, desired_size)
 
 The pipeline works as follows:
 
-- **1️. Preprocessing the CTA Image**: Load the CTA scan and apply Gaussian filtering preprocessing and clip intensity values (0-95 intensity range)
-- **2️. Loading the Images & Masks**: Load the CTA, CTA mask, MNI template, and MNI template mask. Ensure the CTA and MNI template share the same pixel type. Clip CTA intensities between 0 and 100.
-- **3️. Performing the Registration**: Use Mattes Mutual Information as the metric. Initialize the transformation based on image moments. Optimize using Gradient Descent. Execute registration.
-- **4️. Applying the Transformation**: Resample the CTA to align with the MNI template. Save the registered CTA and transformation matrix (`.tfm`).
+- **1. Preprocessing the CTA Image**: Load the CTA scan and apply Gaussian filtering preprocessing and clip intensity values (0-95 intensity range)
+- **2. Loading the Images & Masks**: Load the CTA, CTA mask, MNI template, and MNI template mask. Ensure the CTA and MNI template share the same pixel type. Clip CTA intensities between 0 and 100.
+- **3. Performing the Registration**: Use Mattes Mutual Information as the metric. Initialize the transformation based on image moments. Optimize using Gradient Descent. Execute registration.
+- **4. Applying the Transformation**: Resample the CTA to align with the MNI template. Save the registered CTA and transformation matrix (`.tfm`).
 
 <br>
 
@@ -1185,23 +1185,28 @@ import nibabel as nib
 from scipy.ndimage import gaussian_filter
 import os
 
-def register_cta_pipeline(
-    cta_image_nib, brain_mask_nib, template_nib, template_mask_nib, output_dir, pat="001"
-):
+def register_pipeline(
+    cta_image_path, brain_mask_path, template_path, template_mask_path, output_dir, filename):
     """
     Pipeline for registering CTA images to an MNI template while preserving 512x512 dimensions.
     
     Parameters:
-    - cta_image_nib (nibabel.Nifti1Image): The input CTA image loaded with nibabel.
-    - brain_mask_nib (nibabel.Nifti1Image): The corresponding brain mask loaded with nibabel.
-    - template_nib (nibabel.Nifti1Image): The MNI template loaded with nibabel.
-    - template_mask_nib (nibabel.Nifti1Image): The MNI brain mask loaded with nibabel.
+    - cta_image_path (str): The input CTA image path.
+    - brain_mask_path (str): The corresponding brain mask path.
+    - template_path (str): The MNI template path.
+    - template_mask_path (str): The MNI brain mask path.
     - output_dir (str): Directory to save the registered images and transformations.
     - filename (str): Patient ID or identifier for file naming.
     
     Outputs:
     - Saves registered CTA images and the transformation matrix in the output directory.
     """
+
+    # Load images with nibabel
+    cta_image_nib = nib.load(cta_image_path)
+    brain_mask_nib = nib.load(brain_mask_path)
+    template_nib = nib.load(template_path)
+    template_mask_nib = nib.load(template_mask_path)
 
     # Define output file paths
     transformation_path = os.path.join(output_dir, f"{filename}_transformation_cta_clipped_to_mni_template.tfm")
@@ -1298,18 +1303,12 @@ template_path = "coreTemplate-MNI152lin_T1_1mm.nii.gz"
 template_mask_path = "coreTemplate-MNI152lin_T1_1mm-mask.nii.gz"
 output_dir = "registered_output"
 
-# Load images with nibabel
-cta_image_nib = nib.load(cta_image_path)
-brain_mask_nib = nib.load(brain_mask_path)
-template_nib = nib.load(template_path)
-template_mask_nib = nib.load(template_mask_path)
-
 # Import the function
-register_cta_pipeline(
-    cta_image_nib=cta_image_nib, 
-    brain_mask_nib=brain_mask_nib, 
-    template_nib=template_nib, 
-    template_mask_nib=template_mask_nib, 
+register_pipeline(
+    cta_image_path=cta_image_path, 
+    brain_mask_path=brain_mask_path, 
+    template_path=template_path, 
+    template_mask_path=template_mask_path, 
     output_dir=output_dir,
     filename="toy-CTA"
 )
