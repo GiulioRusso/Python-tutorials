@@ -1,10 +1,14 @@
 [Back to Index 🗂️](./README.md)
 
-# 🧠 Guide to NIfTI Files (.nii.gz) 
+<center><h1>🧠 Guide to NIfTI Files</h1></center>
+
+<br>
 
 ## ℹ️ Introduction
 
 NIfTI (Neuroimaging Informatics Technology Initiative) is a file format commonly used to store medical image data, particularly MRI scans, CTA and more. This guide will explain what .nii.gz files are, why they are used, how to handle them, and common operations you may need to perform.
+
+<br>
 
 ## 📁 What is a .nii.gz File?
 
@@ -12,18 +16,12 @@ The .nii.gz file is a compressed version of the NIfTI format. NIfTI files store 
 
 **1. Header**: Contains metadata about the image.<br>
 - *Voxel Information*: the physical size (typically in millimeters) of a 3D pixel, and the space betwen them.
-- *Dimensions*:number of voxels in each direction.
-- *Datatype* (uint8, int16, float32, etc.)
-- *Affine Matrix*:
-    - First 3x3 submatrix: Rotation and scaling.
-    - Last column: Translation vector maps voxel coordinates to world coordinates in millimeters
+- *Dimensions*: number of voxels in each direction.
+- *Datatype* type of the data pixels (uint8, int16, float32, etc.)
+- *Affine Matrix*: 4x4 matrix that maps voxel coordinates to real-world coordinates in millimiters. The first 3x3 submatrix apply rotation and scaling. The last column is a translation vector maps voxel coordinates to world coordinates in millimeters
 
-<br>
-<img src="./images/NIfTI-Guide/slice-info.png" width=300px>
-<br>
-<img src="./images/NIfTI-Guide/volume-info.png" width=300px>
-<br>
-<br>
+    <img src="images/NIfTI-Guide/affine.png" alt="https://dartbrains.org/content/Preprocessing.html" width=500px>
+
 
 **2. Data**: The actual image data, stored in a multi-dimensional array.<br>
 
@@ -43,7 +41,14 @@ You may see different outputs:
    ```
    your_file.nii.gz: dBase III DBT, version number 0, next free block index 348
    ```
-   
+
+<br>
+<img src="./images/NIfTI-Guide/slice-info.png" width=300px>
+<br>
+<img src="./images/NIfTI-Guide/volume-info.png" width=300px>
+
+<br>
+<br>
 <br>
 
 ## 🐍 Installing Necessary Libraries
@@ -58,7 +63,11 @@ Before working with .nii.gz files, you'll need the right libraries. In Python, t
     pip3 install SimpleITK
     ```
 
-## 🧭 Reference system
+<br>
+<br>
+<br>
+
+<center><h1>🧭 Reference system</h1></center>
 
 NIfTI files has a straighforward reference system with the origin placed behing the `right ear of the patient`:
 
@@ -198,7 +207,13 @@ In summary, every coordinate inside the 3D reference system can be mapped on the
     </tr>
 </table>
 
-## 👩‍⚕️ Common operations on NIfTI files
+<br>
+<br>
+<br>
+
+<center><h1>👩‍⚕️ Common operations on NIfTI files</h1></center>
+
+<br>
 
 ### ⚙️ Load and Save a `.nii.gz` File
 
@@ -221,6 +236,8 @@ nib.save(nifti_img, output_path)
 print(f"NIfTI image saved to: {output_path}")
 ```
 
+<br>
+
 ### 🛠️ Open and Save `.nii.gz` with `gz` compression using SimpleITK
 
 If the `.nii.gz` file is not saved with `gz` compression, `nibabel` can't open the NIfTI file. In this case it's possible to open the file with SimpleITK and save it with the `gz` compression.
@@ -239,6 +256,8 @@ sitk.WriteImage(image, output_path, useCompression=True)
 print(f"Compressed image saved to {output_path}")
 ```
 
+<br>
+
 ### 📑 Extracting Header Information from a NIfTI File using Nibabel
 
 ```python
@@ -255,6 +274,8 @@ print(f"Voxel Dimensions: {header.get_zooms()}")
 print(f"Data Type: {header.get_data_dtype()}")
 ```
 
+<br>
+
 ### 🍕 Extracting slices
 
 ```python
@@ -267,6 +288,8 @@ coronal_slice = data[:, 50, :]  # Get the 50th slice along Y
 # Sagittal slice (X-Axis)
 sagittal_slice = data[50, :, :]  # Get the 50th slice along X
 ```
+
+<br>
 
 ### 🎙️ Show slice
 
@@ -290,6 +313,8 @@ plt.title('Sagittal Slice')
 plt.show()
 ```
 
+<br>
+
 ### 🔄 Loop through slices
 
 ```python
@@ -307,6 +332,8 @@ for slice_index in range(data.shape[0]):
     
 ```
 
+<br>
+
 ### ✂️ Cut the volume
 
 ```python
@@ -319,6 +346,8 @@ x_min, x_max = 50, 150
 cut_data = data[z_min:z_max, y_min:y_max, x_min:x_max]
 ```
 
+<br>
+
 ### 📊 Clip Volume Data Between Two Values
 
 ```python
@@ -328,6 +357,8 @@ clipped_data = np.clip(data, 0, 200)
 # Verify the range
 print(f"Data min: {clipped_data.min()}, Data max: {clipped_data.max()}")
 ```
+
+<br>
 
 ### 🧊 Extract the minimum 3D Bounding Box around the brain
 
@@ -360,6 +391,8 @@ nib.save(bounding_box_img, output_path)
 
 print(f"Bounding box saved to {output_path}")
 ```
+
+<br>
 
 ### 🙏 Padding
 ```python
@@ -405,136 +438,27 @@ nib.save(padded_img, output_path)
 print(f"Padded bounding box saved to {output_path}")
 ```
 
-### 🏁 Resampling Guide
-
-Before resampling a NIfTI image, it is important to extract key metadata such as size, spacing, origin, and direction. SimpleITK provides various functions to retrieve these properties:
-- **`GetImageFromArray(arr)`**: Returns a sitk image from numpy array.
-- **`GetSize()`**: Retrieves the voxel count in each dimension.
-- **`GetSpacing()`**: Returns the physical spacing between voxels.
-- **`GetOrigin()`**: Specifies the physical location of the first voxel.
-- **`GetDirection()`**: Defines the image orientation in world coordinates.
-- **`Resample()`**: Adjusts image resolution and spacing while maintaining alignment.
-
 <br>
-
-```python
-import SimpleITK as sitk
-
-# Load the NIfTI image
-image = sitk.ReadImage("toy-CTA.nii.gz")
-
-# Get the image size (number of voxels in each dimension)
-size = image.GetSize()  # Output: (Width, Height, Depth)
-
-# Get the voxel spacing (physical size of each voxel in mm)
-spacing = image.GetSpacing()  # Output: (SpacingX, SpacingY, SpacingZ)
-
-# Get the image origin (physical coordinates of the first voxel)
-origin = image.GetOrigin()
-
-# Get the image direction (orientation of the image in physical space)
-direction = image.GetDirection()
-
-# Get the pixel type (data type of the image)
-pixel_type = image.GetPixelID()
-
-# Print information
-print(f"Size: {size}")
-print(f"Spacing: {spacing}")
-print(f"Origin: {origin}")
-print(f"Direction: {direction}")
-print(f"Pixel Type: {pixel_type}")
-```
-
-When resampling an image, we want to adjust one dimension of the image (e.g., the Z-dimension, number of slices) while maintaining the field of view. To do this, we compute the new spacing along the dimension to resample:
-
-```python
-# Define the target number of slices (e.g., 320 slices)
-target_z_size = 320
-
-# Compute new Z-spacing to maintain the same field of view
-new_z_spacing = (spacing[2] * size[2]) / target_z_size
-new_spacing = (spacing[0], spacing[1], new_z_spacing)
-
-print(f"New Spacing: {new_spacing}")
-```
-
-To resample a CTA image, we use `sitk.Resample()`, ensuring that the other dimensions remain unchanged while adjusting the desired axis. Different interpolation methods exist:
-
-
-| Interpolation Method       | Description | Best Used For |
-|---------------------------|-------------|--------------|
-| `sitk.sitkNearestNeighbor` | Keeps values strictly 0 or 1 | Binary masks or annotations |
-| `sitk.sitkLinear`          | Fast, but may introduce slight blurring | General-purpose resampling |
-| `sitk.sitkBSpline`         | Smooth interpolation, preserves details | High-quality medical images |
-
-
-
-```python
-def resample_cta(image: sitk.Image, new_z_size=512):
-    """
-    Resamples a CTA scan to have a uniform number of slices along Z while keeping X-Y unchanged.
-    
-    Parameters:
-    - image (sitk.Image): Input CTA image.
-    - new_z_size (int): Target number of slices.
-    
-    Returns:
-    - resampled_img (sitk.Image): Resampled image.
-    """
-    original_size = image.GetSize()
-    original_spacing = image.GetSpacing()
-    
-    # Compute new Z spacing
-    new_z_spacing = (original_spacing[2] * original_size[2]) / new_z_size
-    new_spacing = (original_spacing[0], original_spacing[1], new_z_spacing)
-    
-    # Define new size, keeping X and Y the same
-    new_size = [original_size[0], original_size[1], new_z_size]
-    
-    # Resample the image
-    resampled_img = sitk.Resample(
-        image,
-        new_size,
-        sitk.Transform(),  # Identity transform to prevent shifting
-        sitk.sitkBSpline,  # Interpolation method for smooth results
-        image.GetOrigin(),
-        new_spacing,
-        image.GetDirection(),
-        0,  # Background fill value
-        image.GetPixelID()
-    )
-
-    # To ensure the image does not shift during resampling, always preserve the origin and direction
-    resampled_image.SetOrigin(image.GetOrigin())
-    resampled_image.SetSpacing(new_spacing)
-    resampled_image.SetDirection(image.GetDirection())
-    
-    return resampled_img
-
-# Example usage
-image = sitk.ReadImage("toy-CTA.nii.gz")
-resampled_image = resample_cta(image)
-sitk.WriteImage(resampled_image, "toy-CTA-resampled.nii.gz")
-```
-
-
 <br>
 <br>
 
-# 🔭 Tools for imaging
+<center><h1>🔭 Tools for imaging</h1></center>
 
 Let's explore some useful tools when working with images and also with 3D images.
 
 <br>
 <br>
 
-# 🔬 ImageJ
+<center><h1>🔬 ImageJ</h1></center>
 
 ImageJ is a powerful, open-source image processing tool widely used in scientific research, particularly in medical imaging, microscopy, and bioinformatics. It supports a broad range of image formats, including NIfTI, DICOM, TIFF, and JPEG, and provides extensive analysis tools.
 
+<br>
+
 ## ⚙️ Installation
 ImageJ is available for Windows, macOS, and Linux on the [Official Website](https://imagej.nih.gov/ij/).
+
+<br>
 
 ## 🏞️ ImageJ Interface Overview
 When you launch ImageJ, the main toolbar appears with essential tools for interacting with images:
@@ -562,14 +486,19 @@ For ROI (Region of Interest) analysis, coordinates are measured in pixels or phy
 
 <br>
 <br>
+<br>
 
-# 🩻 ITK-SNAP
+<center><h1>🩻 ITK-SNAP</h1></center>
 
 ITK-SNAP is a powerful open-source tool for visualizing, annotating, and segmenting 3D medical images. It is widely used for neuroimaging and other medical image analysis tasks.
+
+<br>
 
 ## ⚙️ Installation
 
 ITK-SNAP is available for Windows, macOS, and Linux. Download the latest version from the [Official Website](https://www.itksnap.org/)
+
+<br>
 
 ## 🏞️ ITK-SNAP Interface Overview
 
@@ -652,10 +581,13 @@ For more details, visit the [ITK-SNAP User Guide](https://www.itksnap.org/pmwiki
 
 <br>
 <br>
+<br>
 
-# ⚒️ FSL
+<center><h1>⚒️ FSL</h1></center>
 
 FSL (FMRIB Software Library) is a powerful set of tools used for analyzing and processing medical imaging data, particularly neuroimaging data. It includes a variety of programs for image registration, segmentation, and statistical analysis.
+
+<br>
 
 ## ⚙️ Installation
 
@@ -668,28 +600,19 @@ FSL can be installed on macOS, Linux, and Windows (via WSL) using the [Official 
     python3 fslinstaller.py
     ```
 - Follow the on-screen instructions to complete the installation.
-- Once installed, configure the environment by adding this to your `~/.bashrc` or `~/.zshrc`:
-  ```bash
-  export FSLDIR=/usr/local/fsl
-  source $FSLDIR/etc/fslconf/fsl.sh
-  PATH=${FSLDIR}/bin:${PATH}
-  export PATH
-  ```
-- Apply the changes:
-  ```bash
-  source ~/.bashrc  # or source ~/.zshrc
-  ```
+
+<br>
 
 ## 🎛️ Launching FSL Tools
 
-- **Start FSL Main GUI**:
+- Start FSL Main GUI:
   ```bash
   fsl &
   ```
 
     <img src="./images/NIfTI-Guide/FSL.png" width=400px>
 
-- **Launch FSLView for Image Visualization**:
+- Launch FSLView for Image Visualization:
   ```bash
   fsleyes &
   ```
@@ -700,9 +623,9 @@ FSL can be installed on macOS, Linux, and Windows (via WSL) using the [Official 
 
     <img src="./images/NIfTI-Guide/FSLeyes-example.png" width=400px>
 
-## 🎮 FSL Commands
+<br>
 
-### ℹ️ Obtain metadata info
+## ℹ️ Obtain metadata info
 The `fslhd` command provides detailed metadata about a NIfTI image file.
 ```bash
 fslhd input.nii.gz
@@ -724,14 +647,14 @@ fslhd input.nii.gz
 | `vox_units` | Units for voxel dimensions (`mm` for CT) | `mm` | If missing, file may be non-standard. |
 | `time_units` | Units for time (not relevant for CT) | `s` or empty | If filled, check if the image is 4D. |
 
-### **Voxel Size (Resolution)**
+### **Voxel Size (Resolution):**
 | **Parameter** | **Description** | **Correct CT Value** | **Potential Anomalies** |
 |--------------|----------------|----------------------|--------------------------|
 | `pixdim1, pixdim2` | In-plane resolution (X, Y voxel size) | `0.4 - 0.6 mm` | If **too small** (`< 0.3 mm`), BET may fail. If **too large** (`> 1 mm`), resolution is too low. |
 | `pixdim3` | Slice thickness (Z resolution) | `0.5 - 1.0 mm` | If **too small** (`< 0.3 mm`), may cause issues. If **too large** (`> 5 mm`), resample with `flirt`. |
 | `pixdim4` | Time resolution | `0.0` | If nonzero, likely an incorrect 4D image. |
 
-### **Intensity Calibration & Scaling**
+### **Intensity Calibration & Scaling:**
 | **Parameter** | **Description** | **Correct CT Value** | **Potential Anomalies** |
 |--------------|----------------|----------------------|--------------------------|
 | `cal_max, cal_min` | Calibration max/min intensity | `0.0` or actual HU range | If both are `0.0`, BET might fail. Fix with `fslmaths -add 0`. |
@@ -739,7 +662,7 @@ fslhd input.nii.gz
 | `scl_inter` | Intensity intercept value | `100.0` or `0.0` | If too high, image contrast may be incorrect. |
 | `datatype` | Storage format for intensity values | `4 (INT16)` | If `16 (FLOAT32)`, convert with `fslmaths -dt int16`. |
 
-### **Image Orientation & Transformation Matrices**
+### **Image Orientation & Transformation Matrices:**
 | **Parameter** | **Description** | **Correct CT Value** | **Potential Anomalies** |
 |--------------|----------------|----------------------|--------------------------|
 | `qform_code, sform_code` | Q-form and S-form matrix type (scanner coordinates) | `1 (Scanner Anat)` | If `0`, spatial information is missing. Fix with `fslorient -setqformcode 1`. |
@@ -748,7 +671,13 @@ fslhd input.nii.gz
 | `qform_yorient` | Y-axis orientation | `Posterior-to-Anterior` | If incorrect, image may be flipped. |
 | `qform_zorient` | Z-axis orientation | `Inferior-to-Superior` | If incorrect, slices may be in the wrong order. |
 
+<br>
+<br>
+<br>
 
+## 🎮 Skull Stripping commands
+
+<br>
 
 ### 🧠 Skull Stripping using `BET` (Brain Extraction Tool)
 BET removes non-brain tissue from the 3D images.
@@ -757,6 +686,8 @@ bet input.nii.gz output_brain.nii.gz -m -f 0.5
 ```
 - `-m`: Outputs a binary brain mask.
 - `-f`: Fractional intensity threshold (default is `0.5`). Adjust for better extraction. Lower values keep more brain tissue.
+
+<br>
 
 ### ⚡ Enhanced BET Skull Stripping with Bias Field Correction
 To improve skull stripping by reducing intensity bias and improving robustness, use the following command:
@@ -767,6 +698,8 @@ bet input.nii.gz output_brain.nii.gz -B -f 0.5 -g 0
 - `-f`: Fractional intensity threshold (default is `0.5`). Adjust for better extraction. Lower values keep more brain tissue.
 - `-g 0`: Ensures the center-of-mass is automatically detected without additional adjustments.
 
+<br>
+
 ### 🎯 Cropping Field of View using `robustfov`
 Automatically crops the volume scan to remove unnecessary background.
 ```bash
@@ -775,14 +708,9 @@ robustfov -i input.nii.gz -r output_fov.nii.gz
 - `-i`: Input image.
 - `-r`: Output image focused on the Field of View.
 
-### 🛠️ Image Registration with `FLIRT`
-FLIRT (FMRIB's Linear Image Registration Tool) aligns images.
-```bash
-flirt -in input.nii.gz -ref reference.nii.gz -out output_registered.nii.gz
-```
-- `-in`: Input image.
-- `-ref`: Reference image.
-- `-out`: Output registered image.
+**Note**: the output volume dimension might change from the input image. Robust FOV define the Volume of Interest.
+
+<br>
 
 ### 📏 Image Resampling with `fslreorient2std`
 Ensures image orientation follows standard conventions.
@@ -790,51 +718,670 @@ Ensures image orientation follows standard conventions.
 fslreorient2std input.nii.gz output_reoriented.nii.gz
 ```
 
+<br>
+
 ### 🏗️ Image Thresholding with `fslmaths`
 Threshold an image at a given intensity level.
 ```bash
-fslmaths input.nii.gz -thr 100 -bin thresholded_mask.nii.gz
+fslmaths input.nii.gz -thr 0 -bin thresholded_mask.nii.gz
 ```
-- `-thr 100`: Set intensity threshold at 100. All voxels with intensities below 100 are set to 0.
+- `-thr 0`: Set intensity threshold at 0. All voxels with intensities below 0 are set to 0.
 - `-bin`: Binarizes the output (values become 0 or 1).
 
 <br>
 
-### 🔨Skulling pipeline
-Here a CTA skulling pipeline example:
-
-1️. Crop the Field of View (FOV) to focus on the brain. CTA scans often include the neck and skull base, which interfere with BET.
+Clip intensities inside a range.
 ```bash
-robustfov -i input.nii.gz -r input_fov.nii.gz
+fslmaths input.nii.gz -thr 0 -uthr 100  input_th.nii.gz
 ```
+- `-thr 0`: Set lower intensity threshold at 0. All voxels with intensities below 0 are set to 0.
+- `-uthr 100`: Set upper intensity threshold at 100. All voxels with intensities below 100 are set to 100.
 
-2️. Intensity Clipping & Smoothing (CTA images may have high contrast regions like bones or vessels, that can interfere with skull stripping). Reduces noise and sharp intensity transitions, helping BET detect the brain boundary better. Clips intensities again after smoothing (ensures intensity values stay in [0,100]).
+<br>
+
+## ℹ️ FSL Wiki
+
+For more information, visit the [FSL Wiki](https://fsl.fmrib.ox.ac.uk/fsl/fslwiki).
+
+
+<br>
+<br>
+<br>
+
+<center><h1>🧲 Registration Guide</h1></center>
+
+<br>
+
+## 🌎 MNI Template: Standardized Brain Atlas for Medical Imaging
+
+The Montreal Neurological Institute (MNI) template is a widely used standardized brain atlas for medical imaging. It provides a common space for registering and analyzing brain scans obtained from MRI and CTA imaging. The MNI template is essential for comparing anatomical structures across different subjects and studies.
+
+Here an example of the registration meaning:
+
+<img src="images/NIfTI-Guide/registration.png" alt="http://jpeelle.net/mri/_images/registration.png" width="500">
+
+### 📏 Purpose of MNI Template
+- **Spatial Normalization**: Aligns brain scans to a common coordinate system.
+- **Inter-Subject Comparisons**: Enables comparison of different brains in the same reference space.
+- **Group Analysis**: Useful for statistical studies in neuroimaging.
+- **Atlas-Based Segmentation**: Helps in identifying brain structures.
+- **AI Applications**: Used as a preprocessing step for deep learning models in medical imaging.
+
+### 🗺️ MNI Coordinate System
+The MNI template follows a standardized coordinate system to describe brain anatomy.
+- **Origin**: The standard coordinate system is based on the **anterior commissure (AC)**.
+- **XYZ Axes**:
+  - **X-axis**: Left (-) to Right (+).
+  - **Y-axis**: Posterior (-) to Anterior (+).
+  - **Z-axis**: Inferior (-) to Superior (+).
+
+### 📐 MNI Template Dimensions
+The most commonly used MNI template, **MNI152**, has the following dimensions:
+- **Voxel size**: 1mm³ isotropic resolution.
+- **Matrix size**: 182 × 218 × 182 (X × Y × Z).
+- **Field of view**: Covers the entire human brain with precise alignment.
+
+<img src="images/NIfTI-Guide/MNI-space.jpeg" alt="https://dartbrains.org/content/Preprocessing.html" width=500px>
+
+
+
+<br>
+
+## 🏗️ Common MNI Templates
+Several MNI templates exist, optimized for different imaging modalities:
+
+### 1️⃣ **MNI152 Template** (Most Common)
+- Based on **152 averaged brain MRIs**.
+- Available at **1mm, 2mm, and 4mm resolutions**.
+- Used for **functional MRI (fMRI)** and **statistical parametric mapping (SPM)**.
+- Can be downloaded from **[FSL](https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/Atlases)** and **[SPM](https://www.fil.ion.ucl.ac.uk/spm/software/spm12/)**.
+
+### 2️⃣ **MNI305 Template**
+- Based on **305 MRI scans**.
+- Older version, but still used in some neuroimaging studies.
+
+### 3️⃣ **ICBM152 Nonlinear Asymmetric Template**
+- Includes **nonlinear deformations** to match individual brain variations.
+- Ideal for **high-precision brain mapping**.
+
+<br>
+
+## 🔄 Registering an Image to MNI Space
+To align a CTA or MRI scan to the MNI template, image registration is required.
+
+### 🛠️ Using FSL `FLIRT` (Linear Registration)
 ```bash
-fslmaths input_fov.nii.gz -thr 0 -uthr 100  input_th.nii.gz
-fslmaths input_th.nii.gz -s 1  input_th_sm.nii.gz
-fslmaths input_th_sm.nii.gz -thr 0 -uthr 100  input_th_sm_th.nii.gz
+flirt -in input_cta.nii.gz -ref MNI152_T1_1mm.nii.gz -out registered_cta.nii.gz -omat transform.mat
 ```
+- `-in input_cta.nii.gz` → Input brain scan.
+- `-ref MNI152_T1_1mm.nii.gz` → MNI template reference.
+- `-out registered_cta.nii.gz` → Registered output.
+- `-omat transform.mat` → Transformation matrix file.
+
+<br>
+
+### 🔍 Using ANTs (Advanced Normalization)
+```bash
+antsRegistrationSyNQuick.sh -d 3 -f MNI152_T1_1mm.nii.gz -m input_mri.nii.gz -o output_
+```
+- `-d 3` → 3D registration.
+- `-f` → Fixed image (MNI template).
+- `-m` → Moving image (input scan).
+- `-o` → Output prefix.
+
+<br>
+
+### 🔢 Using SPM (MATLAB Toolbox)
+SPM provides graphical tools to align images to MNI space.
+1. Open **SPM12** in MATLAB.
+2. Select `Normalize (Est & Reslice)`
+3. Choose the MNI152 template as the reference.
+4. Select the input image for registration.
+5. Run the process and save the output.
+
+
+
+
+<br>
+<br>
+<br>
+
+<center><h1>👾 Preprocessing pipelines</h1></center>
+
+<br>
+
+<h2>🔨Skulling pipeline for CTAs</h2>
+
+Here's a CTA skulling pipeline example:
+
+### ⚒️ FSL:
+
+1. Crop the Field of View (FOV) to focus on the brain. CTA scans often include the neck and skull base, which interfere with BET.
+    ```bash
+    robustfov -i input.nii.gz -r input_fov.nii.gz
+    ```
+
+<br>
+
+2. Intensity Clipping & Smoothing (CTA images may have high contrast regions like bones or vessels, that can interfere with skull stripping). Reduces noise and sharp intensity transitions, helping BET detect the brain boundary better. Clips intensities again after smoothing (ensures intensity values stay in [0,100]).
+    ```bash
+    fslmaths input_fov.nii.gz -thr 0 -uthr 100  input_th.nii.gz
+    fslmaths input_th.nii.gz -s 1  input_th_sm.nii.gz
+    fslmaths input_th_sm.nii.gz -thr 0 -uthr 100  input_th_sm_th.nii.gz
+    ```
+
+<br>
 
 3. Brain Extraction Using BET.
-```bash
-bet input_th_sm_th input_brain_sm -R -f 0.1 -g 0 -m
-```
-Uses: <br>
-`-R` → Robust brain center estimation (recommended for non-MR images like CTA).<br>
-`-f 0.1` → More conservative skull stripping (keeps more peripheral brain tissue).<br>
-`-g 0` → No vertical gradient applied.<br>
-`-m` → Saves the binary brain mask (*_mask.nii.gz).<br>
+    ```bash
+    bet input_th_sm_th input_brain_sm -R -f 0.1 -g 0 -m
+    ```
+    Uses: <br>
+    `-R` → Robust brain center estimation (recommended for non-MR images like CTA).<br>
+    `-f 0.1` → More conservative skull stripping (keeps more peripheral brain tissue).<br>
+    `-g 0` → No vertical gradient applied.<br>
+    `-m` → Saves the binary brain mask (*_mask.nii.gz).<br>
+
+<br>
 
 4. Apply the Extracted Brain Mask to the Original CTA
     ```bash
     fslmaths input_fov.nii.gz -mul input_brain_sm_mask.nii.gz input_brain.nii.gz
     ```
 
+<br>
 
-## ℹ️ FSL Wiki
+### 🐍 Python:
 
-For more information, visit the [FSL Wiki](https://fsl.fmrib.ox.ac.uk/fsl/fslwiki).
+```python
+def fsl_pipeline(args):
+    """
+    Runs the full FSL pipeline and save the skull stripped image:
+    1. FOV cropping.
+    2. Intensity clipping and smoothing.
+    3. BET.
+    4. Apply BET mask to the original image and clip it.
 
+    Parameters:
+    - filename (str): Name of the original CTA to skull.
+    - input_path (str): Input path where the input CTA is located
+    - output_path (str): Output path where the output skulled CTA will be saved
+    - f_value (str): Fractional intensity value.
+    """
+    filename, input_path, output_path, f_value = args
+
+    input_image = os.path.join(input_path, filename)
+    base_name = filename.replace(".nii.gz", "")
+    fov_image = os.path.join(output_path, f"{base_name}_fov.nii.gz")
+    threshold_image = os.path.join(output_path, f"{base_name}_th.nii.gz")
+    smooth_image = os.path.join(output_path, f"{base_name}_th_sm.nii.gz")
+    threshold_smooth_image = os.path.join(output_path, f"{base_name}_th_sm_th.nii.gz")
+    skulled_image = os.path.join(output_path, f"{base_name}.skulled.nii.gz")
+    mask_image = os.path.join(output_path, f"{base_name}.skulled_mask.nii.gz")
+    final_brain_image = os.path.join(output_path, f"{base_name}_brain.nii.gz")
+    output_image = os.path.join(output_path, f"{base_name}.skulled.clipped.nii.gz")
+
+    try:
+        # step 1: crop FOV
+        subprocess.run(["robustfov", "-i", input_image, "-r", fov_image], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
+        # step 2: intensity clipping and smoothing
+        subprocess.run(["fslmaths", fov_image, "-thr", "0", "-uthr", "100", threshold_image], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        subprocess.run(["fslmaths", threshold_image, "-s", "1", smooth_image], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        subprocess.run(["fslmaths", smooth_image, "-thr", "0", "-uthr", "100", threshold_smooth_image], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
+        # step 3: BET skull stripping
+        subprocess.run(["bet", threshold_smooth_image, skulled_image, "-R", "-f", str(f_value), "-g", "0", "-m"], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
+        # step 4: apply brain mask to the original CTA
+        subprocess.run(["fslmaths", input_image, "-mul", mask_image, final_brain_image], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
+        # step 5: clip the final brain image
+        # load the nifti file
+        nii_img = nib.load(final_brain_image)
+        nii_data = nii_img.get_fdata()
+        # clip the values
+        clipped_data = np.clip(nii_data, 0, 200)
+        # create a new nifti image
+        clipped_img = nib.Nifti1Image(clipped_data, nii_img.affine, nii_img.header)
+        # save the modified image
+        nib.save(clipped_img, output_image)
+
+        return filename, None
+
+    except subprocess.CalledProcessError as e:
+
+        print(f"Error processing {filename}: {e}")
+
+        return filename, str(e)
+```
+
+<br>
+<br>
+<br>
+
+<h2>🏁 Resampling Guide</h2>
+
+Before resampling a NIfTI image, it is important to extract key metadata such as size, spacing, origin, and direction. SimpleITK provides various functions to retrieve these properties:
+- **`GetImageFromArray(arr)`**: Returns a sitk image from numpy array.
+- **`GetSize()`**: Retrieves the voxel count in each dimension.
+- **`GetSpacing()`**: Returns the physical spacing between voxels.
+- **`GetOrigin()`**: Specifies the physical location of the first voxel.
+- **`GetDirection()`**: Defines the image orientation in world coordinates.
+- **`Resample()`**: Adjusts image resolution and spacing while maintaining alignment.
+
+<br>
+
+```python
+import SimpleITK as sitk
+
+# Load the NIfTI image
+image = sitk.ReadImage("toy-CTA.nii.gz")
+
+# Get the image size (number of voxels in each dimension)
+size = image.GetSize()  # Output: (Width, Height, Depth)
+
+# Get the voxel spacing (physical size of each voxel in mm)
+spacing = image.GetSpacing()  # Output: (SpacingX, SpacingY, SpacingZ)
+
+# Get the image origin (physical coordinates of the first voxel)
+origin = image.GetOrigin()
+
+# Get the image direction (orientation of the image in physical space)
+direction = image.GetDirection()
+
+# Get the pixel type (data type of the image)
+pixel_type = image.GetPixelID()
+
+# Print information
+print(f"Size: {size}")
+print(f"Spacing: {spacing}")
+print(f"Origin: {origin}")
+print(f"Direction: {direction}")
+print(f"Pixel Type: {pixel_type}")
+```
+
+Let's work in the case we want to adjust one dimension of the image (e.g., the Z-dimension, number of slices) while maintaining the field of view. To do this, we compute the new spacing along the dimension to resample:
+
+```python
+# Define the target number of slices (e.g., 320 slices)
+target_z_size = 320
+
+# Compute new Z-spacing to maintain the same field of view
+new_z_spacing = (spacing[2] * size[2]) / target_z_size
+new_spacing = (spacing[0], spacing[1], new_z_spacing)
+
+print(f"New Spacing: {new_spacing}")
+```
+
+To resample a CTA image, we use `sitk.Resample()`, ensuring that the other dimensions remain unchanged while adjusting the desired axis. Different interpolation methods exist:
+
+
+| Interpolation Method         | Description                                        | Best Used For                        |
+|-----------------------------|----------------------------------------------------|--------------------------------------|
+| `sitk.sitkNearestNeighbor`  | Keeps values strictly 0 or 1                      | Binary masks or annotations         |
+| `sitk.sitkLinear`           | Fast, but may introduce slight blurring           | General-purpose resampling          |
+| `sitk.sitkBSpline`          | Smooth interpolation, preserves details           | High-quality medical images         |
+| `sitk.sitkGaussian`         | Uses Gaussian kernel for smoothing                | Reducing noise, preserving structure |
+| `sitk.sitkHammingWindowedSinc` | Sharp edges, minimizes ringing artifacts       | High-quality, artifact-free resampling |
+| `sitk.sitkCosineWindowedSinc`  | Cosine-weighted sinc function for smoothness   | Preserving image intensity balance  |
+| `sitk.sitkWelchWindowedSinc`   | Welch window function, balances sharpness & smoothness | MRI or CT images with minimal distortion |
+| `sitk.sitkLanczosWindowedSinc` | High-precision sinc interpolation              | When fine details must be retained  |
+
+
+
+```python
+def resample_cta_pipeline(image: sitk.Image, new_z_size=512):
+    """
+    Resamples a CTA scan to have a uniform number of slices along Z while keeping X-Y unchanged.
+    
+    Parameters:
+    - image (sitk.Image): Input CTA image.
+    - new_z_size (int): Target number of slices.
+    
+    Returns:
+    - resampled_img (sitk.Image): Resampled image.
+    """
+    original_size = image.GetSize()
+    original_spacing = image.GetSpacing()
+    
+    # Compute new Z spacing
+    new_z_spacing = (original_spacing[2] * original_size[2]) / new_z_size
+    new_spacing = (original_spacing[0], original_spacing[1], new_z_spacing)
+    
+    # Define new size, keeping X and Y the same
+    new_size = [original_size[0], original_size[1], new_z_size]
+    
+    # Resample the image
+    resampled_img = sitk.Resample(
+        image,
+        new_size,
+        sitk.Transform(),  # Identity transform to prevent shifting
+        sitk.sitkBSpline,  # Interpolation method for smooth results
+        image.GetOrigin(),
+        new_spacing,
+        image.GetDirection(),
+        0,  # Background fill value
+        image.GetPixelID()
+    )
+
+    # To ensure the image does not shift during resampling, always preserve the origin and direction
+    resampled_image.SetOrigin(image.GetOrigin())
+    resampled_image.SetSpacing(new_spacing)
+    resampled_image.SetDirection(image.GetDirection())
+    
+    return resampled_img
+
+# Example usage
+image = sitk.ReadImage("toy-CTA.nii.gz")
+resampled_image = resample_cta(image)
+sitk.WriteImage(resampled_image, "toy-CTA-resampled.nii.gz")
+```
+
+<br>
+<br>
+<br>
+
+<h2>🔩 Registration pipeline</h2>
+
+The registration pipeline aligns CTA scans to the MNI template.
+
+You can resample the template to your desired shape with:
+
+
+```python
+import SimpleITK as sitk
+
+
+def resample_template(input_template_path, output_template_path, target_size=(512, 512, 182), target_spacing=None):
+    """
+    Resamples a given template to the desired dimensions.
+
+    Parameters:
+    - input_template_path (str): Path to the input NIfTI template.
+    - output_template_path (str): Path to save the resampled template.
+    - target_size (tuple): Desired output dimensions (X, Y, Z). Default is (512, 512, 182).
+    - target_spacing (tuple): Desired voxel spacing. If None, it is computed automatically.
+
+    Output:
+    - Saves the resampled template as a new NIfTI file.
+    """
+
+    # Load input template
+    template_image = sitk.ReadImage(input_template_path)
+
+    # Get original template size and spacing
+    original_size = template_image.GetSize()  # (X, Y, Z)
+    original_spacing = template_image.GetSpacing()  # (spacingX, spacingY, spacingZ)
+
+    print(f"Original size: {original_size}, Original spacing: {original_spacing}")
+
+    # Compute new spacing to preserve the same field of view (if not provided)
+    if target_spacing is None:
+        target_spacing = [
+            original_spacing[0] * (original_size[0] / target_size[0]),  # New spacing X
+            original_spacing[1] * (original_size[1] / target_size[1]),  # New spacing Y
+            original_spacing[2] * (original_size[2] / target_size[2])  # New spacing Z
+        ]
+
+    print(f"Target size: {target_size}, Target spacing: {target_spacing}")
+
+    # Define resampling filter
+    resample = sitk.ResampleImageFilter()
+    resample.SetSize(target_size)
+    resample.SetOutputSpacing(target_spacing)
+    resample.SetOutputDirection(template_image.GetDirection())  # Keep orientation
+    resample.SetOutputOrigin(template_image.GetOrigin())  # Keep origin
+    resample.SetInterpolator(sitk.sitkLinear)  # Use linear interpolation for smooth resampling
+    resample.SetDefaultPixelValue(0)  # Fill new space with 0
+
+    # Apply resampling
+    resampled_template = resample.Execute(template_image)
+
+    # Save the resampled template
+    sitk.WriteImage(resampled_template, output_template_path)
+    print(f"Resampled template saved to: {output_template_path}")
+
+
+# Example Usage:
+input_template_path = "coreTemplate-MNI152lin_T1_1mm.nii.gz"  # Your original template
+desired_size = (512, 512, 416)  # Desired volume shape
+output_template_path = f"coreTemplate-MNI152lin_T1_1mm_{desired_size[0]}_{desired_size[1]}_{desired_size[2]}_.nii.gz"  # Where to save the resampled template
+
+# Call the resampling function
+resample_template(input_template_path, output_template_path, desired_size)
+```
+
+The pipeline works as follows:
+
+- **1️. Preprocessing the CTA Image**: Load the CTA scan and apply Gaussian filtering preprocessing and clip intensity values (0-95 intensity range)
+- **2️. Loading the Images & Masks**: Load the CTA, CTA mask, MNI template, and MNI template mask. Ensure the CTA and MNI template share the same pixel type. Clip CTA intensities between 0 and 100.
+- **3️. Performing the Registration**: Use Mattes Mutual Information as the metric. Initialize the transformation based on image moments. Optimize using Gradient Descent. Execute registration.
+- **4️. Applying the Transformation**: Resample the CTA to align with the MNI template. Save the registered CTA and transformation matrix (`.tfm`).
+
+<br>
+
+SimpleITK provides various functions to perform registration:
+
+- **`Clamp(image, lowerBound, upperBound, outputPixelType)`**: Clips intensity values within a specified range (used to constrain CTA intensities).
+- **`ImageRegistrationMethod()`**: Creates an instance of the registration method class.
+- **`CenteredTransformInitializer(fixed, moving, transform, method)`**: Initializes a transformation based on the center of mass of the images.
+Uses `sitk.Euler3DTransform()` for rigid registration (rotation + translation). Uses `sitk.CenteredTransformInitializerFilter.MOMENTS` to improve initial alignment.
+- **`SetMetricAsMattesMutualInformation(numberOfHistogramBins)`**: Sets the similarity metric for registration (good for multimodal images).
+- **`SetMetricSamplingStrategy(strategy)`**: Chooses how image samples are selected during registration.
+- **`SetMetricSamplingPercentage(percentage)`**: Defines the fraction of pixels used for metric computation (speeds up registration).
+- **`SetMetricMovingMask(mask)`**: Sets a mask for the moving image to focus registration on relevant regions.
+- **`SetMetricFixedMask(mask)`**: Sets a mask for the fixed image to ignore irrelevant areas.
+- **`SetInterpolator(interpolation_method)`**: Defines the interpolation method (e.g., sitk.sitkLinear).
+- **`SetOptimizerAsGradientDescent(learningRate, numberOfIterations, estimateLearningRate)`**: Optimizes the transformation using a gradient descent approach. numberOfIterations=500: Controls how many optimization steps are performed.
+- **`Execute(fixed_image, moving_image)`**: Runs the registration process and returns the final transformation.
+
+<br>
+
+```python
+import SimpleITK as sitk
+import numpy as np
+import nibabel as nib
+from scipy.ndimage import gaussian_filter
+import os
+
+def register_cta_pipeline(
+    cta_image_nib, brain_mask_nib, template_nib, template_mask_nib, output_dir, pat="001"
+):
+    """
+    Pipeline for registering CTA images to an MNI template while preserving 512x512 dimensions.
+    
+    Parameters:
+    - cta_image_nib (nibabel.Nifti1Image): The input CTA image loaded with nibabel.
+    - brain_mask_nib (nibabel.Nifti1Image): The corresponding brain mask loaded with nibabel.
+    - template_nib (nibabel.Nifti1Image): The MNI template loaded with nibabel.
+    - template_mask_nib (nibabel.Nifti1Image): The MNI brain mask loaded with nibabel.
+    - output_dir (str): Directory to save the registered images and transformations.
+    - filename (str): Patient ID or identifier for file naming.
+    
+    Outputs:
+    - Saves registered CTA images and the transformation matrix in the output directory.
+    """
+
+    # Define output file paths
+    transformation_path = os.path.join(output_dir, f"{filename}_transformation_cta_clipped_to_mni_template.tfm")
+    registered_cta_path = os.path.join(output_dir, f"{filename}_cta_registered_to_mni.nii.gz")
+    registered_filtered_cta_path = os.path.join(output_dir, f"{filename}_cta_clipped_registered_to_mni.nii.gz")
+
+    print(f"Preprocessing CTA for subject {filename}...")
+
+    # Convert nibabel images to NumPy arrays
+    moving_image_arr = cta_image_nib.get_fdata().astype(np.float32)
+
+    # Apply preprocessing: remove negative values, smooth, and intensity clip
+    moving_image_arr[moving_image_arr < 0] = 0  # Remove negative values
+    moving_image_arr = gaussian_filter(moving_image_arr, sigma=2.0)  # First Gaussian filter
+    moving_image_arr[moving_image_arr > 95] = 0  # Clip high-intensity values
+    moving_image_arr = gaussian_filter(moving_image_arr, sigma=3.0)  # Second Gaussian filter
+
+    # Save the preprocessed image
+    preprocessed_cta_nib = nib.Nifti1Image(moving_image_arr, cta_image_nib.affine)
+    preprocessed_cta_path = os.path.join(output_dir, f"{filename}_cta_0_95_gaussian_filtered.nii.gz")
+    nib.save(preprocessed_cta_nib, preprocessed_cta_path)
+
+    print(f"Converting images to SimpleITK format for registration...")
+
+    # Convert nibabel images to SimpleITK images
+    inputCTA = sitk.GetImageFromArray(moving_image_arr)
+    templateCTA = sitk.GetImageFromArray(template_nib.get_fdata().astype(np.float32))
+    templateMask = sitk.GetImageFromArray(template_mask_nib.get_fdata().astype(np.float32))
+    maskCTA = sitk.GetImageFromArray(brain_mask_nib.get_fdata().astype(np.float32))
+
+    # Ensure CTA image has the same pixel type as the template
+    inputCTA = sitk.Cast(inputCTA, templateCTA.GetPixelID())
+
+    # Clip intensity values to [0,100]
+    inputCTA = sitk.Clamp(inputCTA, lowerBound=0, upperBound=100, outputPixelType=inputCTA.GetPixelID())
+
+    print(f"Performing registration for subject {filename}...")
+
+    registration_method = sitk.ImageRegistrationMethod()
+
+    # Initialize transformation using image moments (for better initial alignment)
+    initial_transform = sitk.CenteredTransformInitializer(
+        templateMask, maskCTA, sitk.Euler3DTransform(),
+        sitk.CenteredTransformInitializerFilter.MOMENTS
+    )
+    registration_method.SetInitialTransform(initial_transform, inPlace=False)
+
+    # Set the metric as Mutual Information (good for different modalities like CTA and MRI)
+    registration_method.SetMetricAsMattesMutualInformation(numberOfHistogramBins=50)
+    registration_method.SetMetricMovingMask(maskCTA)
+    registration_method.SetMetricFixedMask(templateMask)
+    registration_method.SetMetricSamplingStrategy(registration_method.RANDOM)
+    registration_method.SetMetricSamplingPercentage(0.5)
+
+    # Set interpolator
+    registration_method.SetInterpolator(sitk.sitkLinear)
+
+    # Set optimizer settings
+    registration_method.SetOptimizerAsGradientDescent(
+        learningRate=1.0, numberOfIterations=500, estimateLearningRate=registration_method.Once
+    )
+    registration_method.SetOptimizerScalesFromPhysicalShift()
+
+    # Execute the registration
+    final_transform = registration_method.Execute(templateCTA, inputCTA)
+
+    print(f"Applying transformation and saving registered images...")
+
+    # Resample the preprocessed CTA to match the template space
+    outputCTA_filtered = sitk.Resample(inputCTA, templateCTA, final_transform, sitk.sitkLinear, 0.0)
+    
+    # Resample the original CTA to match the template space
+    original_cta_sitk = sitk.GetImageFromArray(cta_image_nib.get_fdata().astype(np.float32))
+    outputCTA = sitk.Resample(original_cta_sitk, templateCTA, final_transform, sitk.sitkLinear, 0.0)
+
+    # Convert SimpleITK images back to nibabel for saving
+    outputCTA_filtered_nib = nib.Nifti1Image(sitk.GetArrayFromImage(outputCTA_filtered), template_nib.affine)
+    outputCTA_nib = nib.Nifti1Image(sitk.GetArrayFromImage(outputCTA), template_nib.affine)
+
+    # Save the registered images
+    nib.save(outputCTA_filtered_nib, registered_filtered_cta_path)
+    nib.save(outputCTA_nib, registered_cta_path)
+
+    # Save the transformation matrix
+    sitk.WriteTransform(final_transform, transformation_path)
+
+    print(f"Registration complete. Outputs saved in {output_dir}")
+
+
+# Define file paths
+cta_image_path = "toy-CTA.nii.gz"
+brain_mask_path = "toy-CTA-mask.nii.gz"
+template_path = "coreTemplate-MNI152lin_T1_1mm.nii.gz"
+template_mask_path = "coreTemplate-MNI152lin_T1_1mm-mask.nii.gz"
+output_dir = "registered_output"
+
+# Load images with nibabel
+cta_image_nib = nib.load(cta_image_path)
+brain_mask_nib = nib.load(brain_mask_path)
+template_nib = nib.load(template_path)
+template_mask_nib = nib.load(template_mask_path)
+
+# Import the function
+register_cta_pipeline(
+    cta_image_nib=cta_image_nib, 
+    brain_mask_nib=brain_mask_nib, 
+    template_nib=template_nib, 
+    template_mask_nib=template_mask_nib, 
+    output_dir=output_dir,
+    filename="toy-CTA"
+)
+
+```
+
+<br>
+
+The transformation can be applied to another CTA or annotation file:
+
+```python
+import SimpleITK as sitk
+
+def apply_transformation(input_image_path, reference_cta_path, transform_path, output_path, is_binary_mask=False):
+    """
+    Applies a saved transformation to an image (e.g., annotation mask, vessel mask) to align it with the registered CTA. Saves the transformed image in the specified output path.
+
+    Parameters:
+    - input_image_path (str): Path to the image that needs transformation (e.g., annotation or vessel mask).
+    - reference_cta_path (str): Path to the registered CTA that serves as the spatial reference.
+    - transform_path (str): Path to the transformation file (.tfm) obtained from CTA registration.
+    - output_path (str): Path where the transformed image will be saved.
+    - is_binary_mask (bool): If True, uses nearest-neighbor interpolation (preserves binary masks). Default is False.
+    """
+
+    # Load the input image to be transformed
+    input_image = sitk.ReadImage(input_image_path, sitk.sitkFloat32)
+
+    # Load the registered CTA as a reference for spatial alignment
+    reference_cta = sitk.ReadImage(reference_cta_path, sitk.sitkFloat32)
+
+    # Load the transformation matrix (.tfm) obtained from CTA registration
+    transformation = sitk.ReadTransform(transform_path)
+
+    # Choose interpolation method based on the type of input image
+    # - Nearest Neighbor (sitk.sitkNearestNeighbor) for binary masks (ensures 0s and 1s remain unchanged)
+    # - Linear Interpolation (sitk.sitkLinear) for soft images (ensures smooth transformation)
+    interpolator = sitk.sitkNearestNeighbor if is_binary_mask else sitk.sitkLinear
+
+    # Apply the transformation using `Resample`
+    transformed_image = sitk.Resample(
+        input_image,         # Image to be transformed
+        reference_cta,       # Registered CTA (defines the spatial properties)
+        transformation,       # Precomputed transformation matrix
+        interpolator,        # Selected interpolation method
+        0.0,                 # Default pixel value for new regions
+        input_image.GetPixelID()  # Preserve original pixel type
+    )
+
+    # Save the transformed image
+    sitk.WriteImage(transformed_image, output_path)
+    print(f"Transformed image saved to: {output_path}")
+
+
+# Define file paths
+annotation_path = "toy-annotation.nii.gz"  # Original annotation mask
+registered_cta_path = "toy-CTA_cta_registered_to_mni.nii.gz"  # Already registered CTA
+transform_path = "./toy-CTA_transformation_cta_clipped_to_mni_template.tfm"  # Transformation from CTA registration
+output_dir = "./registered_output/"
+
+# Apply transformation to annotation (binary mask)
+apply_transformation(
+    input_image_path=annotation_path,
+    reference_cta_path=registered_cta_path,
+    transform_path=transform_path,
+    output_path=os.path.join(output_dir, "toy-annotation_registered.nii.gz"),
+    is_binary_mask=True  # Because it's a segmentation mask
+)
+
+```
+
+<br>
 <br>
 <br>
 
