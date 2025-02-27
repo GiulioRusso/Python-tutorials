@@ -69,7 +69,7 @@ Before working with .nii.gz files, you'll need the right libraries. In Python, t
 
 <center><h1>🧭 Reference system</h1></center>
 
-NIfTI files has a straighforward reference system with the origin placed behing the `right ear of the patient`:
+NIfTI files has a straighforward reference system with the origin placed behind the `right ear of the patient`:
 
 <img src="./images/NIfTI-Guide/3D-reference-system-CTA.png" width=200px>
 
@@ -1173,7 +1173,7 @@ Uses `sitk.Euler3DTransform()` for rigid registration (rotation + translation). 
 - **`SetMetricMovingMask(mask)`**: Sets a mask for the moving image to focus registration on relevant regions.
 - **`SetMetricFixedMask(mask)`**: Sets a mask for the fixed image to ignore irrelevant areas.
 - **`SetInterpolator(interpolation_method)`**: Defines the interpolation method (e.g., sitk.sitkLinear).
-- **`SetOptimizerAsGradientDescent(learningRate, numberOfIterations, estimateLearningRate)`**: Optimizes the transformation using a gradient descent approach. numberOfIterations=500: Controls how many optimization steps are performed.
+- **`SetOptimizerAsGradientDescent(learningRate, numberOfIterations, estimateLearningRate)`**: Optimizes the transformation using a gradient descent approach. `numberOfIterations=500`: Controls how many optimization steps are performed.
 - **`Execute(fixed_image, moving_image)`**: Runs the registration process and returns the final transformation.
 
 <br>
