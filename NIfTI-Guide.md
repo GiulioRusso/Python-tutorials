@@ -10,6 +10,15 @@ NIfTI (Neuroimaging Informatics Technology Initiative) is a file format commonly
 
 <br>
 
+## 📚 Useful resources
+
+- [How to use FSL brain extraction](https://medium.com/selective-sapience/how-to-use-fsl-brain-extraction-9a83aa100796) <br>
+- [MRI preprocessing using FSL](https://medium.com/@daminininad/mri-preprocessing-using-fsl-383a67e7185)<br>
+- [fMRI tutorial](https://andysbrainbook.readthedocs.io/en/latest/fMRI_Short_Course/fMRI_Intro.html)<br>
+- [FSL Course on YouTube](https://www.youtube.com/@FSLCourse)<br>
+
+<br>
+
 ## 📁 What is a .nii.gz File?
 
 The .nii.gz file is a compressed version of the NIfTI format. NIfTI files store 3D data `(X, Y, Z)` or 4D data for time series `(X, Y, Z, T)`, commonly from medical imaging techniques. NIfTI files contains different metadata:
