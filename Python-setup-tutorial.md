@@ -392,8 +392,38 @@ Anaconda and Miniconda are powerful tools for managing Python environments and d
 ## 🔧 Installation Process
 
 ### macOS/Linux:
-1. Download the installer: Visit [Miniconda](https://docs.conda.io/projects/miniconda/en/latest/) or [Anaconda](https://www.anaconda.com/) and choose the appropriate installer for your system.
-2. Alternatively, use the graphical installer (.pkg for macOS).
+1. Download the miniconda installer:
+     ```bash
+     wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
+     ```
+   To download a different version check [here](https://repo.anaconda.com/miniconda/) and use:
+     ```bash
+     # Replace <FILENAME> with the installer Filename you copied from the archive
+     wget https://repo.anaconda.com/miniconda/<FILENAME>
+     ```
+2. Check file integrity:
+     ```bash
+     # Replace <FILE_NAME> with the path to your installer
+     sha256sum <FILE_NAME>
+     ```
+   Compare the hash value you see with the value [here](https://repo.anaconda.com/miniconda/). Remember to verify the hash corresponding to your downloaded miniconda version.
+
+3. Install miniconda:
+     ```bash
+     bash ~/Miniconda3-latest-Linux-x86_64.sh
+     ```
+   Follow the instruction by pressing `Enter` and write `yes`.
+
+4. Apply modifications: Close and re-open your terminal window for the installation to fully take effect, or use the following command to refresh the terminal:
+     ```bash
+     # Bash shell (Linux)
+     source ~/.bashrc
+     # Zsh shell (macOS)
+     source ~/.zshrc
+     ```
+
+More about the procedure for different systems and shells [here](https://www.anaconda.com/docs/getting-started/miniconda/install#macos-linux-installation:to-download-a-different-version).
+
 
 ### Windows:
 1. Download the installer from the [official site](https://www.anaconda.com/).
@@ -408,13 +438,21 @@ Anaconda and Miniconda are powerful tools for managing Python environments and d
    ```bash
    mkdir -p ~/miniconda3
    ```
-2. Download and install Miniconda:
+2. Download the Miniconda installer and save it as specified:
    ```bash
    wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O ~/miniconda3/miniconda.sh
+   ```
+3. Execute the script in non interactive mode, update an existing install if one is already there and install prefix (target directory) set to `~/miniconda3`:
+   ```bash
    bash ~/miniconda3/miniconda.sh -b -u -p ~/miniconda3
+   ```
+4. Remove the installer:
+   ```bash
    rm -rf ~/miniconda3/miniconda.sh
+   ```
+5. Refresh the shell:
+   ```bash
    ~/miniconda3/bin/conda init bash
-   ~/miniconda3/bin/conda init zsh
    ```
 
 <br>
@@ -423,7 +461,7 @@ Anaconda and Miniconda are powerful tools for managing Python environments and d
 
 | **Purpose**                              | **Command**                               | **Description**                                                                      |
 |---------------------------------------|-------------------------------------------|--------------------------------------------------------------------------------------|
-| **Create an environment**             | `conda create --name myvenv python=3.8`    | Creates a new environment named `myvenv` with Python version 3.8.                    |
+| **Create an environment**             | `conda create --name myvenv` or `conda create --name myvenv python=3.8`    | Creates a new environment named `myvenv`. If specified, with the Python version.                    |
 | **Activate an environment**           | `conda activate myvenv`                    | Activates the environment `myvenv`.                                                  |
 | **Deactivate an environment**         | `conda deactivate`                        | Deactivates the currently active environment.                                       |
 | **Remove an environment**             | `conda env remove --name myvenv`           | Deletes the environment `myvenv` completely.                                         |
