@@ -507,7 +507,7 @@ When sharing or deploying Python projects, it is essential to specify dependenci
 
 <br>
 
-## 📜 `requirements.txt` (For Pip-Based Environments)
+## 📜 `requirements.txt` (for Pip-Based Environments)
 A `requirements.txt` file lists the necessary Python packages and their versions. To generate it:
 ```bash
 pip3 freeze > requirements.txt
@@ -647,9 +647,112 @@ This starts a local web server and opens the Jupyter interface in your default b
 
 <center><h1>🌴 Using PyCharm for Python Projects</h1></center>
 
-[PyCharm Download](https://www.jetbrains.com/pycharm/download/)
+<br>
+
+## 🔩 PyCharm Install
+
+### for macOS/Windows:
+Follow the tutorial: [PyCharm Download](https://www.jetbrains.com/pycharm/download/)
+
+### for Linux:
+1. Navigate to the Directory:
+   - Ensure you’re in the directory where the `.tar.gz` file is located. Use:
+     ```bash
+     cd /path/to/directory/
+     ```
+    Replace `/path/to/directory/` with the actual path where your `.tar.gz` files are located. <br>
+    [Download PyCharm archive here](https://www.jetbrains.com/help/pycharm/installation-guide.html#standalone)
+
+2. Extract the Tarball:
+   - Run the following command to extract the PyCharm tarball to the `/opt` directory:
+     ```bash
+     sudo tar xzf pycharm-community-<version>.tar.gz -C /opt/
+     ```
+
+3. Run PyCharm:
+   - Navigate to the extracted folder:
+     ```bash
+     cd /opt/pycharm-community-<version>/
+     ```
+   - Launch PyCharm using the following command:
+     ```bash
+     ./bin/pycharm
+     ```
+      Note: Launch `pycharm` instead of `pycharm.sh`. More about that [here](https://youtrack.jetbrains.com/articles/SUPPORT-A-56/How-to-handle-Switch-to-a-native-launcher-notification)
 
 <br>
+
+
+### 🖥️ Create a Desktop Entry for PyCharm on Linux
+
+1. Open a Terminal:
+   - Use the following command to open a new `.desktop` file with Nano:
+     ```bash
+     sudo nano /usr/share/applications/pycharm.desktop
+     ```
+
+2. Add the Desktop Entry Content:
+   - Paste the following content into the file (adjust the paths as necessary):
+     ```plaintext
+     [Desktop Entry]
+     Name=PyCharm
+     Comment=Python IDE
+     Exec=/path/to/pycharm/bin/pycharm
+     Terminal=false
+     Type=Application
+     Icon=/path/to/pycharm/bin/pycharm.png
+     Categories=Development;IDE;
+     ```
+     Replace `/path/to/pycharm` with the actual path where PyCharm is installed. <br>
+     Note: Connect `pycharm` instead of `pycharm.sh`. More about that [here](https://youtrack.jetbrains.com/articles/SUPPORT-A-56/How-to-handle-Switch-to-a-native-launcher-notification)
+
+3. Save and Exit Nano:
+   - Press `Ctrl + O` (Write Out) to save.
+   - Press `Enter` to confirm the file name.
+   - Press `Ctrl + X` to exit Nano.
+
+4. Verify the Icon:
+   - Open your applications menu to ensure the PyCharm icon is visible.
+
+<br>
+
+
+### 💻 Create a Terminal Shortcut for PyCharm on Linux
+
+1. Open the `bashrc` File:
+   - Open a terminal and type the following command to edit your `bashrc` file:
+     ```bash
+     nano ~/.bashrc
+     ```
+
+2. Add the Alias:
+   - Scroll to the bottom of the file and add the following line:
+     ```bash
+     alias pycharm="/path/to/pycharm/bin/pycharm"
+     ```
+     Replace `/path/to/pycharm` with the actual path where PyCharm is installed on your system. <br>
+     Note: Connect `pycharm` instead of `pycharm.sh`. More about that [here](https://youtrack.jetbrains.com/articles/SUPPORT-A-56/How-to-handle-Switch-to-a-native-launcher-notification)
+
+3. Save and Exit Nano:
+   - Press `Ctrl + O` to save the changes.
+   - Press `Enter` to confirm the file name.
+   - Press `Ctrl + X` to exit Nano.
+
+4. Apply the Changes:
+   - Reload your `bashrc` file with the following command:
+     ```bash
+     source ~/.bashrc
+     ```
+
+5. Test the Shortcut:
+   - In the terminal, type:
+     ```bash
+     pycharm
+     ```
+     PyCharm should launch.
+
+<br>
+
 
 ## 1️⃣ Creating a Project with a Virtual Environment
 1. Open **PyCharm** and select **New Project**.
@@ -700,9 +803,36 @@ Install packages in the activated virtual environment using the **Terminal** tab
 
 <center><h1>🥏 Using Visual Studio Code for Python Projects</h1></center>
 
-[Visual Studio Code Download](https://code.visualstudio.com/download)
-
 <br>
+
+## 🔩 Visual Studio Code Install
+
+### for macOS/Windows:
+Follow the tutorial: [Visual Studio Code Download](https://code.visualstudio.com/download)
+
+### for Linux:
+1. Navigate to the Directory:
+   - Ensure you’re in the directory where the `.rpm` file is located. Use:
+     ```bash
+     cd /path/to/directory/
+     ```
+    Replace `/path/to/directory/` with the actual directory path where your `.rpm` files are located. <br>
+    [Download Visual Studio Code `.rpm` here](https://code.visualstudio.com/Download)
+
+2. Install the `.rpm` Package:
+   - Run the following command to install Visual Studio Code:
+     ```bash
+     sudo rpm -ivh code-<version>.rpm
+     ```
+    Replace `<version>` with the actual version you downloaded.
+
+3. Verify Installation:
+   - Once installed, you can launch Visual Studio Code by typing:
+     ```bash
+     code
+     ```
+<br>
+
 
 ## 1️⃣ Creating a Project with a Virtual Environment
 1. **Create a Virtual Environment** in your project directory:
