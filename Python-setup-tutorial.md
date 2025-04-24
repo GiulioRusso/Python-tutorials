@@ -509,9 +509,24 @@ When sharing or deploying Python projects, it is essential to specify dependenci
 
 ## 📜 `requirements.txt` (for Pip-Based Environments)
 A `requirements.txt` file lists the necessary Python packages and their versions. To generate it:
+
+- Install `pipreqs`:
 ```bash
-pip3 freeze > requirements.txt
+pip3 install pipreqs
 ```
+
+- Move to your project working directory:
+```bash
+cd /path/to/your/project
+```
+
+- Generate the requirements.txt:
+```bash
+pipreqs . --force
+```
+
+<br>
+
 If writing dependencies manually, ensure you:
 - Specify **package names and versions** to avoid compatibility issues.
 - Keep each dependency on a **new line**.
