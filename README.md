@@ -7,11 +7,14 @@ This project is designed to help newcomers learn various topics about Python pro
 
 ## 🗂️ Table of Contents
 
-- [🐍 Python setup tutorial](./Python-setup-tutorial.md)
+- [🐍 Python Setup Tutorial](./Python-Setup-Tutorial.md)
 - [📦 PyPI Guide](./PyPI-Guide.md)
 - [🛜 SSH basics](./SSH-basics.md)
 - [🔥 PyTorch Parallelization tutorial](./PyTorch-Parallelization-tutorial.md)
 - [🧠 NIfTI Guide](./NIfTI-Guide.md)
+- [🤖 Deep Learning Project Guide](./Deep-Learning-Project-Guide.md)
+- [🧪 Machine Learning Project Guide](./Machine-Learning-Project-Guide.md)
+- [🛠️ Python Project Guide](./Python-Project-Guide.md)
 
 
 ## 🤝 Contribution

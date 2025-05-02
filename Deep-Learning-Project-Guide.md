@@ -1,6 +1,6 @@
 [Back to Index 🗂️](./README.md)
 
-<center><h1>🧠 Deep Learning Project Guide</h1></center>
+<center><h1>🤖 Deep Learning Project Guide</h1></center>
 
 <br>
 
