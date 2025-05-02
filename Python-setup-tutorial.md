@@ -881,7 +881,6 @@ Follow the tutorial: [Visual Studio Code Download](https://code.visualstudio.com
 
 <img src="./images/Python-setup-tutorial/select-global-env-vscode.png" width=500px>
 
-
 <br>
 <br>
 <br>
