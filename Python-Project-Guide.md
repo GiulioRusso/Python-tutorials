@@ -29,7 +29,7 @@ my_project/
 ```
 
 * `src/`: Contains your actual training, inference, and business logic.
-* `config/`: Stores one or more `.yaml` (for path structures), `.json`(for light data storage) or `.env` (for environment variables). These files can be easy loaded in your Python scripts with the libraries `yaml`, `json`and `dotenv` respectively.
+* `config/`: Stores one or more `.yaml` (for path structures), `.json`(for light data storage) or `.env` (for environment variables). These files can be easily loaded in your Python scripts with the libraries `yaml`, `json`and `dotenv` respectively.
 * `tests/`: Ensures all key functionality is verifiable.
 * `venv/`: Local project environment, kept out of version control.
 * `requirements.txt`: Captures dependencies used in the project.
