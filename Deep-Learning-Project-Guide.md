@@ -1115,5 +1115,4 @@ net/
 
 Go check [this repository](https://github.com/GiulioRusso/Deep-Learning-boilerplate) for a Deep Learning boilerplate project.
 
-
-
+[Back to Index 🗂️](./README.md)

@@ -493,3 +493,5 @@ These metrics provide an honest snapshot of generalisation performance and guide
     ```
 
 Go check [this repository](https://github.com/GiulioRusso/Machine-Learning-boilerplate) for a Machine Learning boilerplate project.
+
+[Back to Index 🗂️](./README.md)
