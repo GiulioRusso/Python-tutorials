@@ -1,5 +1,6 @@
+[Back to Index 🗂️](./README.md)
 
-# ⚡ PyTorch Lightning Guide
+<center><h1>⚡ PyTorch Lightning Guide</h1></center>
 
 The typical PyTorch deep learning project structure can be implemented wih **PyTorch Lightning**, a framework that removes much of the boilerplate code while keeping flexibility. Lightning is great for scalability, readability, and rapid experimentation.
 
@@ -246,4 +247,8 @@ trainer.test(model, dataloaders=test_loader)
 This uses the best checkpoint by default (if `ModelCheckpoint` was used). You don’t need to manually reload the model.
 
 
+<br>
+<br>
+<br>
 
+[Back to Index 🗂️](./README.md)
