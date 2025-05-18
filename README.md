@@ -15,6 +15,7 @@ This project is designed to help newcomers learn various topics about Python pro
 - [🤖 Deep Learning Project Guide](./Deep-Learning-Project-Guide.md)
 - [🧪 Machine Learning Project Guide](./Machine-Learning-Project-Guide.md)
 - [🛠️ Python Project Guide](./Python-Project-Guide.md)
+- [⚡ PyTorch Lightning Guide](./PyTorch-Lightning-Guide.md)
 
 
 ## 🤝 Contribution
