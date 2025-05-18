@@ -997,20 +997,20 @@ for epoch in range(start_epoch, num_epochs):
     ...
 ```
 
-### 7. Testing Phase
+### 8. Testing Phase
 
-After training is complete, load the best model and evaluate it on the test set:
+After training and validation is complete, load the best model and evaluate it on the test set. Basically, the test loop is the same of the validation loop:
 
 ```python
 model.load_state_dict(torch.load('best_model.pth'))
-model.eval()
+model.eval()  # Set model to evaluation mode (deactivate dropout, batchnorm behaves differently)
+with torch.no_grad():  # Disable gradient computation for validation
+    for images, labels in validation_loader:
+        images, labels = images.to(device), labels.to(device)
+        outputs = model(images)
 ```
 
 Compute final metrics and plot the corresponding curves.
-
-### 8. Plotting and Reporting
-
-This helps visualize the model's learning behavior and performance.
 
 <br>
 <br>
