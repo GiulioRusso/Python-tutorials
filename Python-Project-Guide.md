@@ -101,6 +101,8 @@ When starting a project or collaborating, you can install the requirements speci
 pip install -r requirements.txt
 ```
 
+> **Note**: in order to keep the testing environment clean to avoid any bugs due to package versions, it's important to create a single Virtual Environment to contains the necessary libraries with the needed versions.
+
 <br>
 
 # 4️⃣ Writing a clear README.md
@@ -157,5 +159,18 @@ Evaluate a pre-trained model:
 - Logging output will be saved to the `logs/` directory, if enabled in the config.
 - The script will automatically create the `save_dir` if it doesn't exist.
 ```
+
+<br>
+
+# 5️⃣ Version Control
+
+Use Git for everything — code, configs,
+dependency files -  in order to keep track of any changes.
+
+You can find a good Git Guide [here](https://rogerdudler.github.io/git-guide/).
+
+<br>
+<br>
+<br>
 
 [Back to Index 🗂️](./README.md)

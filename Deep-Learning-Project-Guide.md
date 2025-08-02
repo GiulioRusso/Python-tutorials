@@ -1115,4 +1115,74 @@ net/
 
 Go check [this repository](https://github.com/GiulioRusso/Deep-Learning-boilerplate) for a Deep Learning boilerplate project.
 
+<br>
+<br>
+<br>
+
+# 🌟 Best practices
+
+Follows a series of general different best practices when coding Deep Learning projects.
+
+## Project organization
+
+There’s no single “official” way to structure a PyTorch project, but the community and big contributors have kind of agreed on some good ideas. Here’s a common, modular layout people suggest:
+
+```bash
+project_root/
+├── configs/ # Config files (like YAML)
+├── data/ # Your raw data (or scripts to download/process it)
+├── notebooks/ # Jupyter notebooks for playing around
+├── src/ # The main source code lives here
+│ ├── net/ # Your modules definitions (networks, data management, loop)
+│ └── main.py # The script you run to start everything
+├── tests/ # Unit tests go here
+├── requirements.txt # Project dependencies
+└── README.md # Explain your project here
+```
+
+## Coding Style and Conventions
+
+Writing code in a consistent style makes it much easier for everyone (including future you) to read and maintain.
+- PEP 8: Follow Python’s official PEP 8 style guide. It’s the baseline. PyTorch itself uses tools like flake8 to check this. Tools like Black or Ruff can auto-format your code.
+- Naming: Use clear, descriptive names for variables and functions. Don’t use weird abbreviations (e.g., activation is better than act). Follow common Python patterns: lower_case_with_underscores for functions/modules, CapWords for classes.
+- Docstrings: Write clear explanations (docstrings) for your modules,classes, and functions. Explain what they do, what inputs they take, what they return, and how to use them.
+- Comments: Use comments to explain why you did something complex, not just what the code does. Keep comments short, accurate, and up-to- date. Type Hinting: Strongly recommended! Use Python’s type hints (like `def my_func(name: str) -> int:` ) to make your code clearer and allow tools like MyPy to catch errors early.
+- Explicit is Better Than Implicit: Write code that is obvious and easy to understand, even if it’s a bit longer. Avoid overly clever or obscure tricks.
+- Avoid Old Stuff: Don’t use deprecated PyTorch features. Examples: `.data`, `Tensor(…)` (use `torch.tensor(…)`), `.type()` (use `.to()` or `.dtype`), `t.new_* methods`.
+
+## Optimizing the DataLoader
+
+The DataLoader is the workhorse. It wraps your Dataset and handles batching, shuffling, and loading data in parallel. Tuning its parameters is
+key for speed. Key Parameters for Speed:
+
+- `num_workers` (int, default: 0): How many separate processes to use for loading data. Setting num_workers > 0 turns on multiprocessing. This lets the CPU load and preprocess the next batch while the GPU is busy with the current batch, hiding the loading time. Finding the best number often needs experimentation — it depends on your CPU cores, how complex preprocessing is, and disk speed. Too many workers can actually slow things down due to overhead. On Windows, using multiprocessing needs extra care: put your main code in `if __name__ == ‘__main__’`: and definecustom functions (like collate_fn ) at the top level.
+- `pin_memory` (bool, default: False): If True, the DataLoader copies tensors into “pinned” memory before returning them. Transferring data from pinned memory to the GPU is usually much faster than from regular (pageable) memory. So, definitely set this to True if you’re using a GPU. Be aware that pinned memory is a limited resource; using too much can cause problems. If your `collate_fn` returns custom batch types, you need to implement a `pin_memory()` method on that custom type for this to work. To make the transfer asynchronous (non-blocking), use `tensor.to(device, non_blocking=True)` when moving data to the GPU.
+- `prefetch_factor` (int, default: when `num_workers` > 0): How many batches each worker should load ahead of time. Prefetching helps overlap data loading and GPU work even better, boosting GPU utilization. Increasing it can improve speed but uses more memory to store the prefetched batches.
+- `persistent_workers` (bool, default: False): If True, the worker processes don’t shut down after one epoch; they stick around for the next one. This can save time if starting up workers is slow.
+- `collate_fn` (Callable, optional): A function that takes a list of samples (from your Dataset) and merges them into a single batch. PyTorch’s default `collate_fn` handles common types like Python numbers and PyTorch tensors (it stacks tensors along a new batch dimension). You need a custom collate_fn for special cases, like handling sequences of different lengths (requires padding) or returning custom batch objects. Be careful: a complex collate_fn can become a bottleneck itself, especially with multiprocessing.
+
+Getting fast data loading usually means tweaking `num_workers`, `pin_memory`, `prefetch_factor`, and making sure your Dataset itself is efficient. The best settings depend heavily on your hardware, data, and preprocessing, so you’ll likely need to experiment.
+
+## Experiment Tracking and Logging
+
+Systematically tracking experiments is essential for understanding results, comparing runs, debugging, and ensuring reproducibility.
+
+- Purpose: Record hyperparameters, code version, environment details, training/validation metrics, model outputs, plots, final model files, etc.
+- Tools:
+    1. TensorBoard: Built-in PyTorch support (`torch.utils.tensorboard.SummaryWriter`). Good for basic visualization of scalars (loss, accuracy), images, histograms, model graphs.
+    2. Weights & Biases (W&B): A popular commercial platform (with a freetier). Offers powerful experiment tracking, live plots, hyperparameter sweeps, model/dataset versioning (Artifacts), collaboration features, and reporting. Easy PyTorch integration (`wandb.init`, `wandb.log`, `wandb.watch`).
+    3. MLflow: An open-source platform for managing the end-to-end ML lifecycle (tracking, packaging, model registry, deployment). For plain PyTorch, you usually call APIs like mlflow.log_param, mlflow.log_metric, `mlflow.pytorch.log_model` manually. Has auto-logging for PyTorch Lightning.
+    4. Others: Neptune.ai, Comet ML, DVC (can also track experiments).
+- Best Practices:
+    1. Log Configs: Record all hyperparameters and key settings at the start of a run (wandb.config, mlflow.log_params).
+    2. Log Metrics: Log key metrics (loss, accuracy) frequently during training and validation. Use a consistent step counter (like global training steps or samples seen) as the x-axis.
+    3. Track Models: Use features like `wandb.watch` to automatically log model gradients and parameters (optional).
+    4. Save Artifacts: Store important output files (checkpoints, config files, plots) as artifacts in the tracking platform.
+    5. Log Environment: Record code version (e.g., Git commit hash), Python environment (`requirements.txt` or conda export), and PyTorch/CUDA versions.
+    6. Use Framework Integrations: Frameworks like PyTorch Lightning have Logger callbacks that easily integrate with TensorBoard, W&B, MLflow, etc..
+
+<br>
+<br>
+<br>
+
 [Back to Index 🗂️](./README.md)
