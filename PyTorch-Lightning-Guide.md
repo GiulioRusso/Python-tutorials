@@ -246,6 +246,13 @@ trainer.test(model, dataloaders=test_loader)
 
 This uses the best checkpoint by default (if `ModelCheckpoint` was used). You don’t need to manually reload the model.
 
+<br>
+
+## 📝 Notes
+
+Debugging using Tensorboard needs some precautions:
+- Always use `num_workers=0` in the Dataloaders. Use the debugger and a number of workers greater than 0 can cause thred problems.
+- If you log images, a `num_workers` greater than 0 can cause Race Condition and crush. If you use `matplotlib` ensure you specify `matplotlib.use("Agg")` to disable any backend GUI and thus use a number of workers greater than 0, log images and avoid crushes. But if you are debugging, this mode will suppress any GUI interaction (e.g., `plt.show()`), thus make sure to use it only when running a training pipeline and not in debugging mode.
 
 <br>
 <br>
