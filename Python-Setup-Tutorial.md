@@ -329,7 +329,7 @@ Navigate to your project directory or specify a desired location:
    python3.x -m venv /path/to/project/myvenv
    ```
 
-> **Note**: you can search for any environment on you computer with the bash command `find ~ -name "pyvenv.cfg" 2>/dev/null`. It will output all the paths to the python venv on your device.
+> **Note**: you can search for any environment on you computer with the bash command `find ~ -name "pyvenv.cfg" 2>/dev/null`. It will output all the paths to the python venv folders on your device. It does not include the system interpreters or venvs created with other tools.
 
 <br>
 
