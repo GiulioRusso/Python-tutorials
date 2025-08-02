@@ -320,7 +320,7 @@ Virtual environments allow you to create isolated Python environments for projec
 <br>
 
 ## ⭐️ Creating a Virtual Environment
-1. Navigate to your project directory or specify a desired location:
+Navigate to your project directory or specify a desired location:
    ```bash
    python3 -m venv /path/to/project/myvenv
    ```
@@ -328,6 +328,8 @@ Virtual environments allow you to create isolated Python environments for projec
    ```bash
    python3.x -m venv /path/to/project/myvenv
    ```
+
+> **Note**: you can search for any environment on you computer with the bash command `find ~ -name "pyvenv.cfg" 2>/dev/null`. It will output all the paths to the python venv on your device.
 
 <br>
 
