@@ -91,6 +91,7 @@ and trying to use it in a separate Python project. You can always check if a pac
 
 4. Upload all the *.tar.gz* and the *.whl* of the package distribution:
     ```bash
+    twine check dist/*
     twine upload dist/*
     ```
  **Note**: its not necessary to upload the entire directory. You can select which *.tar.gz* and *.whl* upload to the PyPI account.
@@ -102,6 +103,126 @@ and trying to use it in a separate Python project. You can always check if a pac
 <br>
 
 **Note**: When you need to update your package, just add the new/modified code and repeat the steps `2.` (build the new package version) and `4.` (upload the new build). Note that it could be needed to delete the old version builds from your `dist` folder.
+
+<br>
+<br>
+<br>
+
+## 📦 Exposing the public API with `__init__.py`
+
+The `__init__.py` file defines the **public interface** of your package.
+Its purpose is **not** to implement logic, but to control *what users can and should import*.
+
+---
+
+### 🎯 Why `__init__.py` matters
+
+A well-written `__init__.py` allows users to write:
+
+```python
+import your_package
+your_package.some_function()
+```
+
+or:
+
+```python
+from your_package import useful_function
+```
+
+without needing to know the internal file structure of your package.
+
+It also:
+
+* Improves usability
+* Prevents leaking internal implementation details
+* Makes refactoring easier without breaking users’ code
+
+---
+
+### ✅ Recommended structure
+
+Assume your package structure is:
+
+```text
+your_package/
+├── __init__.py
+├── preprocessing.py
+├── draw.py
+├── _version.py
+```
+
+---
+
+### 1️⃣ Define the version in a single place
+
+Create a dedicated file for the version:
+
+```python
+# your_package/_version.py
+__version__ = "0.1.0"
+```
+
+This avoids duplication and allows tooling to read the version safely.
+
+---
+
+### 2️⃣ Expose selected objects in `__init__.py`
+
+```python
+from ._version import __version__
+
+from .preprocessing import normalize, resize
+from .draw import draw_box
+
+__all__ = [
+    "__version__",
+    "normalize",
+    "resize",
+    "draw_box",
+]
+```
+
+Only **public, stable functions or classes** should be exposed here.
+
+---
+
+### 🚫 What to avoid in `__init__.py`
+
+* Heavy imports or expensive computations
+* Wildcard imports (`from module import *`)
+* Internal helpers not meant for users
+* Side effects (prints, file I/O, downloads)
+
+Example of **bad practice**:
+
+```python
+from .preprocessing import *
+print("Package loaded")  # ❌
+```
+
+---
+
+### 🧠 Design guideline
+
+> Think of `__init__.py` as your package’s **API contract**.
+
+If a function is imported in `__init__.py`, you are promising users it will remain stable.
+
+---
+
+### 🧪 Quick check
+
+After installation, the following should work:
+
+```python
+import your_package
+print(your_package.__version__)
+help(your_package)
+```
+
+If users can discover and use your package **without reading the source code**, your `__init__.py` is doing its job.
+
 
 <br>
 <br>
