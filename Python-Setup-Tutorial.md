@@ -363,6 +363,8 @@ With the virtual environment activated, you can use `pip` to install packages. A
 pip install <package_name>
 ```
 
+> **Note**: remember to install `pip` after the actiation of the virtual environment.
+
 <br>
 
 ## 🛑 Deactivating a Virtual Environment
@@ -474,6 +476,7 @@ More about the procedure for different systems and shells [here](https://www.ana
 | **Deactivate an environment**         | `conda deactivate`                        | Deactivates the currently active environment.                                       |
 | **Remove an environment**             | `conda env remove --name myvenv`           | Deletes the environment `myvenv` completely.                                         |
 | **Install a package**                 | `conda install <package_name>`            | Installs a specific package into the active environment.                            |
+| **Install `pip`**                 | `conda install pip`            | Installs pip into the active environment.                            |
 | **Check conda version**               | `conda --version`                         | Displays the currently installed version of conda.                                  |
 | **List installed packages**           | `conda list`                              | Lists all packages installed in the active environment.                             |
 | **List all environments**             | `conda env list`                          | Displays all available environments and their locations.                            |
