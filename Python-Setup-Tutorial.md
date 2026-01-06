@@ -159,6 +159,12 @@ To install `pip`, download and run the `get-pip.py` script from the official sit
 python3 get-pip.py
 ```
 
+or try:
+
+```bash
+python -m ensurepip --upgrade
+```
+
 <br>
 
 ## ⌨️ Basic `pip` Commands
