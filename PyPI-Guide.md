@@ -108,6 +108,91 @@ and trying to use it in a separate Python project. You can always check if a pac
 <br>
 <br>
 
+## 5. Deploy using `pyproject.toml` (modern alternative to `setup.py`) 🆕
+
+`pyproject.toml` is the modern standard (PEP 517/518) and the recommended replacement for `setup.py`. The project structure becomes:
+
+```bash
+.
+├── your_package/
+│   ├── __init__.py
+│   └── ...
+├── LICENSE
+├── README.md
+├── requirements.txt
+└── pyproject.toml        # Replaces setup.py
+```
+
+Below, an example of *pyproject.toml*:
+```toml
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.backends.legacy:build"
+
+[project]
+name = "your_package"
+version = "0.1.0"
+description = "A short description of your package"
+readme = "README.md"
+license = { file = "LICENSE" }
+authors = [
+  { name = "Your Name", email = "your_email@example.com" }
+]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+requires-python = ">=3.6"
+dependencies = []          # List of dependencies (e.g., "requests", "numpy")
+
+[project.urls]
+Homepage = "https://github.com/yourusername/your_package"
+```
+
+1. Install the necessary packages:
+    ```bash
+    pip3 install build twine
+    ```
+
+2. Build your package:
+    ```bash
+    python3 -m build
+    ```
+    This generates the same `dist/` folder with `.tar.gz` and `.whl` files as the `setup.py` approach.
+
+3. Export your API Token as environment variables to avoid entering it manually every time:
+
+    **macOS/Linux** — add to `~/.zshrc` or `~/.bashrc` for persistence:
+    ```bash
+    export TWINE_USERNAME=__token__
+    export TWINE_PASSWORD=pypi-your-api-token-here
+    ```
+    Apply the changes:
+    ```bash
+    source ~/.zshrc   # or source ~/.bashrc
+    ```
+
+    **Windows** — set via PowerShell:
+    ```powershell
+    $env:TWINE_USERNAME = "__token__"
+    $env:TWINE_PASSWORD = "pypi-your-api-token-here"
+    ```
+
+    > **Note**: Always set `TWINE_USERNAME` to the literal string `__token__` and `TWINE_PASSWORD` to your API token (starting with `pypi-`).
+
+4. Upload to PyPI (credentials will be read automatically from the environment):
+    ```bash
+    twine check dist/*
+    twine upload dist/*
+    ```
+
+**Note**: To update your package, bump the `version` field in `pyproject.toml`, rebuild (step `2.`), and re-upload (step `4.`). PyPI does not allow re-uploading the same version, so always increment it first.
+
+<br>
+<br>
+<br>
+
 ## 📦 Exposing the public API with `__init__.py`
 
 The `__init__.py` file defines the **public interface** of your package.
