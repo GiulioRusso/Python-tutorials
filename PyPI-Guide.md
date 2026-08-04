@@ -8,7 +8,7 @@
 1. Create a PyPI account at: https://pypi.org
 2. Add a second email as backup option.
 3. Save the Recovery codes.
-4. Activate the Two Factor Authentication.
+4. Set up **Two-Factor Authentication** — as of 2024 this is **mandatory** on PyPI (not optional) before you can upload or manage a package.
 
 <br>
 
@@ -21,9 +21,14 @@
 │   └── ...               # Other modules/files for your package
 ├── LICENSE               # License information for your package (e.g. MIT, Apache, etc.)
 ├── README.md             # Explains what your package does and how to use it
-├── requirements.txt      # Lists required packages/dependencies for your project
+├── requirements.txt      # Dev-time dependencies for working on the package (see note below)
+├── .gitignore             # Exclude build/, dist/, *.egg-info/ from version control
 └── setup.py              # Contains metadata and instructions for building/installing your package
 ```
+
+> **Note**: `requirements.txt` here is for **developing** the package (tests, linters, build tools). The dependencies your package needs **at install time** belong in `install_requires` (`setup.py`) or `dependencies` (`pyproject.toml`, see §5) — that's what `pip install your_package` actually reads. Don't rely on `requirements.txt` for that; it isn't packaged or installed alongside your library.
+
+> **Note**: the flat layout above (`your_package/` next to `setup.py`) has a common footgun — if you `import your_package` while inside this directory (e.g. running tests from the repo root), Python may silently import the **source folder** instead of the installed package, hiding packaging bugs until a real user installs the wheel. If this bites you, switch to a **`src/` layout** (`src/your_package/...`), which makes it impossible to import the package without installing it first — the standard fix recommended by the Python Packaging Authority.
 
 Below, an example of *setup.py*:
 ```python
@@ -37,25 +42,28 @@ setup(
     author='Your Name',
     author_email='your_email@example.com',
     description='A short description of your package',
-    long_description=open('README.md').read(),
+    long_description=open('README.md', encoding='utf-8').read(),
     long_description_content_type='text/markdown',
     url='https://github.com/yourusername/your_package',  # Project URL (GitHub, GitLab, etc.)
     classifiers=[
         'Programming Language :: Python :: 3',
-        'License :: OSI Approved :: MIT License',
         'Operating System :: OS Independent',
     ],
-    python_requires='>=3.6',
+    python_requires='>=3.9',
 )
 ```
+> `setup.py`/`setup.cfg` is the legacy way of declaring package metadata. `pyproject.toml` (§5 below) is the modern standard — prefer it for new packages.
 
 <br>
 
 ## 3. Create API Token 🔑
 1. Log in to your PyPI account and navigate to your account settings.
 2. Under "API tokens," click "Add API token".
-3. Name your token (e.g. "package_upload_token") and create it.
-4. Save the token string "*pypi-...*" securely (e.g. in a password manager). You will need it to upload your package.
+3. **Scope the token to the single project** you're publishing, not your whole account — limits the blast radius if it ever leaks.
+4. Name your token (e.g. "package_upload_token") and create it.
+5. Save the token string "*pypi-...*" securely (e.g. in a password manager). You will need it to upload your package.
+
+> For CI/CD (GitHub Actions etc.), skip API tokens entirely and use **Trusted Publishing** instead — see the note in §5, step 3.
 
 <br>
 
@@ -70,39 +78,48 @@ Inside the package project:
     pip3 install setuptools wheel
     ```
 
-2. Set up your package.
+2. Clean any previous build, then build your package (PyPI rejects re-uploading an existing version, so stale artifacts in `dist/` from an old version number are harmless, but leftover files from a *failed* build of the *same* version can get uploaded by mistake):
     ```bash
+    rm -rf build/ dist/ *.egg-info
     python3 setup.py sdist bdist_wheel
     ```
 
-**Note**: before distributing your package, its better to test it by deploying it locally on your machine with:
+**Note**: before distributing your package, it's better to test it by deploying it locally on your machine with:
 ```bash
 pip3 install dist/<package_name>-<package_version>-py3-none-any.whl
 ```
 and trying to use it in a separate Python project. You can always check if a package is correctly installed with:
-    ```bash
-    pip3 show <package_name>
-    ```
+```bash
+pip3 show <package_name>
+```
 
 3. Install the twine package in order to upload it to PyPI:
     ```bash
     pip3 install twine
     ```
 
-4. Upload all the *.tar.gz* and the *.whl* of the package distribution:
+4. **Rehearse on TestPyPI first** — a separate index for exactly this purpose, so a mistake doesn't burn a version number on the real index (PyPI never lets you re-upload or delete-and-reuse a version):
     ```bash
     twine check dist/*
+    twine upload --repository testpypi dist/*
+    ```
+    Then verify the install works from there:
+    ```bash
+    pip install --index-url https://test.pypi.org/simple/ <package_name>
+    ```
+    You'll need a [separate TestPyPI account and API token](https://test.pypi.org/) — it does not share accounts/tokens with the real PyPI.
+
+5. Once verified, upload for real:
+    ```bash
     twine upload dist/*
     ```
- **Note**: its not necessary to upload the entire directory. You can select which *.tar.gz* and *.whl* upload to the PyPI account.
-
-5. Insert the API Token asked.
+    Insert the API Token when asked.
 
 6. Check that your package is listed on your PyPI account.
 
 <br>
 
-**Note**: When you need to update your package, just add the new/modified code and repeat the steps `2.` (build the new package version) and `4.` (upload the new build). Note that it could be needed to delete the old version builds from your `dist` folder.
+**Note**: When you need to update your package, just add the new/modified code and repeat the steps `2.` (build the new package version, after bumping `version`) and step `4`/`5` (rehearse, then upload). PyPI does not allow re-uploading the same version number under any circumstances, so always increment it first.
 
 <br>
 <br>
@@ -126,68 +143,76 @@ and trying to use it in a separate Python project. You can always check if a pac
 Below, an example of *pyproject.toml*:
 ```toml
 [build-system]
-requires = ["setuptools>=68", "wheel"]
-build-backend = "setuptools.backends.legacy:build"
+requires = ["setuptools>=77", "wheel"]
+build-backend = "setuptools.build_meta"
 
 [project]
 name = "your_package"
-version = "0.1.0"
+dynamic = ["version"]      # version is read from your_package/_version.py — see the __init__.py section below
 description = "A short description of your package"
 readme = "README.md"
-license = { file = "LICENSE" }
+license = "MIT"                    # SPDX expression (PEP 639) — replaces the old license = {file = "..."} table
+license-files = ["LICENSE"]
 authors = [
   { name = "Your Name", email = "your_email@example.com" }
 ]
 classifiers = [
     "Programming Language :: Python :: 3",
-    "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
 ]
-requires-python = ">=3.6"
+requires-python = ">=3.9"
 dependencies = []          # List of dependencies (e.g., "requests", "numpy")
 
 [project.urls]
 Homepage = "https://github.com/yourusername/your_package"
+
+[tool.setuptools.dynamic]
+version = { attr = "your_package._version.__version__" }
 ```
+> The old `license = { file = "LICENSE" }` table form and the `"License :: OSI Approved :: ..."` classifier are both **deprecated** since setuptools 77 / PEP 639 — use the SPDX string + `license-files` shown above instead.
 
 1. Install the necessary packages:
     ```bash
     pip3 install build twine
     ```
 
-2. Build your package:
+2. Clean previous build artifacts, then build your package:
     ```bash
+    rm -rf build/ dist/ *.egg-info
     python3 -m build
     ```
     This generates the same `dist/` folder with `.tar.gz` and `.whl` files as the `setup.py` approach.
 
-3. Export your API Token as environment variables to avoid entering it manually every time:
+3. Authenticate for upload — two options:
 
-    **macOS/Linux** — add to `~/.zshrc` or `~/.bashrc` for persistence:
+   **Option A — Trusted Publishing (recommended for CI, e.g. GitHub Actions)**: no token to create or store at all. On PyPI, go to your project → **Publishing** → add a Trusted Publisher pointing at your GitHub repo/workflow. In the workflow, grant `permissions: id-token: write` and use [`pypa/gh-action-pypi-publish`](https://github.com/pypa/gh-action-pypi-publish) with no credentials — PyPI issues a short-lived, workflow-scoped token automatically over OIDC. Nothing to leak, nothing to rotate.
+
+   **Option B — API token, for local/manual uploads**: store it in `~/.pypirc`, not in your shell rc file — an rc file is easy to accidentally commit via a dotfiles repo, and a leaked long-lived upload token there can be used to publish malicious versions under your name until you notice and revoke it.
+    ```ini
+    # ~/.pypirc
+    [pypi]
+    username = __token__
+    password = pypi-your-api-token-here
+    ```
+    ```bash
+    chmod 600 ~/.pypirc
+    ```
+    `twine` reads this file automatically — no env vars needed. If you do prefer env vars for a one-off upload, export them in the shell session only, never persist them to `~/.zshrc`/`~/.bashrc`:
     ```bash
     export TWINE_USERNAME=__token__
     export TWINE_PASSWORD=pypi-your-api-token-here
     ```
-    Apply the changes:
-    ```bash
-    source ~/.zshrc   # or source ~/.bashrc
-    ```
 
-    **Windows** — set via PowerShell:
-    ```powershell
-    $env:TWINE_USERNAME = "__token__"
-    $env:TWINE_PASSWORD = "pypi-your-api-token-here"
-    ```
-
-    > **Note**: Always set `TWINE_USERNAME` to the literal string `__token__` and `TWINE_PASSWORD` to your API token (starting with `pypi-`).
-
-4. Upload to PyPI (credentials will be read automatically from the environment):
+4. Rehearse on TestPyPI, then upload to PyPI (see step 4/5 in §4 above for the same rehearse-first flow):
     ```bash
     twine check dist/*
+    twine upload --repository testpypi dist/*
     twine upload dist/*
     ```
 
-**Note**: To update your package, bump the `version` field in `pyproject.toml`, rebuild (step `2.`), and re-upload (step `4.`). PyPI does not allow re-uploading the same version, so always increment it first.
+**Note**: To update your package, bump the version in `your_package/_version.py` (which `dynamic = ["version"]` reads automatically), rebuild (step `2.`), and re-upload (step `4.`). PyPI does not allow re-uploading the same version, so always increment it first.
+
+> If you're using [`uv`](./Python-Setup-Tutorial.md#-uv-fast-all-in-one) for the project, `uv build` and `uv publish` cover steps 2 and 3/4 with the same Trusted Publishing / token support, without needing `build`/`twine` as separate installs.
 
 <br>
 <br>
@@ -221,7 +246,7 @@ It also:
 
 * Improves usability
 * Prevents leaking internal implementation details
-* Makes refactoring easier without breaking users’ code
+* Makes refactoring easier without breaking users' code
 
 ---
 
@@ -248,7 +273,7 @@ Create a dedicated file for the version:
 __version__ = "0.1.0"
 ```
 
-This avoids duplication and allows tooling to read the version safely.
+This avoids duplication and allows tooling to read the version safely — it's also what `pyproject.toml`'s `dynamic = ["version"]` + `[tool.setuptools.dynamic]` (§5 above) points at, so you only ever bump the number in this one file.
 
 ---
 
@@ -290,7 +315,7 @@ print("Package loaded")  # ❌
 
 ### 🧠 Design guideline
 
-> Think of `__init__.py` as your package’s **API contract**.
+> Think of `__init__.py` as your package's **API contract**.
 
 If a function is imported in `__init__.py`, you are promising users it will remain stable.
 

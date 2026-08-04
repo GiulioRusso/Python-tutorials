@@ -4,7 +4,7 @@
 
 Python is a high-level, interpreted programming language widely used in various fields. When working with Python, there are a few key concepts you should understand:
 
-**1. Virtual Environment (venv)**: A virtual environment is an isolated workspace for Python projects. It allows you to manage dependencies for your project without interfering with the global Python installation or other projects.<br>
+**1. Virtual Environment**: A virtual environment is an isolated workspace for Python projects. It allows you to manage dependencies for your project without interfering with the global Python installation or other projects. `venv` is the name of the **stdlib module** that creates one of the possible kinds of virtual environment — see the [Virtual Environments](#virtual-environments) chapter for the other options (Conda, uv).<br>
 **2. Interpreter**: The Python interpreter is the program that reads and executes Python code. Depending on your setup, the interpreter could refer to the system Python, a version you installed manually, or one inside a virtual environment.<br>
 **3. Script**: A script is a standalone Python file (with a `.py` extension) designed to perform a specific task when executed.<br>
 
@@ -26,9 +26,11 @@ Below is a table summarizing essential Python commands and their differences acr
 | **Purpose**                 | **macOS**               | **Linux**               | **Windows**             |
 |----------------------------|------------------------|------------------------|------------------------|
 | Check installed Python version | `python3 --version` or `python3 -V`   | `python3 --version` or `python3 -V`      | `py --version`          |
-| Find the path of the active Python interpreter | `which python3`          | `which python3`          | `where python3`         |
-| Locate all paths of Python 3 | `where python3`          | `where python3`          |                        |
+| Find the path of the active Python interpreter | `which python3`          | `which python3`          | `where python`         |
+| Locate all installed paths of Python 3 | `which -a python3`          | `which -a python3`          | `where python`         |
 | Run a Python script        | `python3 your_script.py` | `python3 your_script.py` | `py your_script.py`     |
+
+> **Note**: `where` is a Windows command; on macOS/Linux the shell builtin `where` only exists in `zsh`, not `bash`. Use `which -a` (works in both) to list every match on the `PATH`.
 
 <br>
 
@@ -41,7 +43,7 @@ Python 2 and Python 3 are distinct versions of the Python programming language, 
 
 On modern systems `python` might not be available. To ensure compatibility, always specify `python3` when working with Python 3.
 
-- macOS and Linux systems often include a system-managed version of Python for internal operations (e.g., Python 2.x or 3.x).
+- macOS and Linux systems often include a system-managed version of Python for internal operations (e.g., Python 2.x or 3.x). **Do not modify or remove it** — the OS itself (package managers, system scripts) may depend on it. See the [⚠️ system Python warning](#-remove-python) below.
 
 To check the version of Python installed:
 - For Python 2: `python2 --version`
@@ -53,7 +55,7 @@ alias python='python3'
 ```
 After adding this, apply the changes by restarting the terminal or running:
 ```bash
-source ~/.zshrc
+source ~/.zshrc   # or source ~/.bashrc, matching whichever file you edited
 ```
 Be cautious with this change, as some older scripts may require `python` to refer to Python 2. Personally, I don't suggest to do that.
 
@@ -97,15 +99,16 @@ It is recommended to avoid using the system Python for development. Instead, ins
 ## Linux 🐧
 
 ### 1. Using the Package Manager
-- Update the package manager and install Python:
+- Update the package manager and install Python, along with `venv` and `pip` (on Debian/Ubuntu these are **separate packages**, not bundled with `python3`):
   ```bash
   sudo apt update
-  sudo apt install python3
+  sudo apt install python3 python3-venv python3-pip
   ```
 - Verify installation:
   ```bash
   python3 --version
   ```
+> **Note**: to install a specific Python version not shipped by your distro (e.g. a newer release on an older Ubuntu LTS), use the [deadsnakes PPA](https://launchpad.net/~deadsnakes/+archive/ubuntu/ppa): `sudo add-apt-repository ppa:deadsnakes/ppa`, then `sudo apt install python3.12 python3.12-venv`.
 
 ### 2. Building from Source
 - Download the source code from [python.org](https://www.python.org/).
@@ -113,14 +116,16 @@ It is recommended to avoid using the system Python for development. Instead, ins
   ```bash
   tar -xvzf Python-<version>.tgz
   cd Python-<version>
-  ./configure
-  make
-  sudo make install
+  ./configure --enable-optimizations
+  make -j "$(nproc)"
+  sudo make altinstall
   ```
 - Verify installation:
   ```bash
-  python3 --version
+  python3.x --version
   ```
+
+> ⚠️ **Never run `sudo make install` here** — it overwrites the system's own `/usr/bin/python3`, which the OS package manager and system scripts depend on. Always use `make altinstall`, which installs as `python3.x` without touching the system binary.
 
 <br>
 
@@ -156,14 +161,16 @@ Python includes `pip`, the default package installer, which simplifies the proce
 ## ⚙️ Installing `pip`
 To install `pip`, download and run the `get-pip.py` script from the official site:
 ```bash
+curl -O https://bootstrap.pypa.io/get-pip.py
 python3 get-pip.py
 ```
 
 or try:
 
 ```bash
-python -m ensurepip --upgrade
+python3 -m ensurepip --upgrade
 ```
+> **Note**: on Debian/Ubuntu, `ensurepip` may be stripped from the system Python; in that case use the `apt install python3-pip` route shown above instead.
 
 <br>
 
@@ -179,13 +186,14 @@ Here are some commonly used `pip` commands to manage Python packages:
 | `pip3 show <package_name>`     | Show detailed information about a package.       |
 | `pip3 install --upgrade pip`   | Upgrade `pip` to the latest version.             |
 | `which pip3`                   | Locate the `pip3` executable path (macOS/Linux). |
-| `where pip3`                   | Locate all paths to `pip3` (Windows).            |
+| `where pip3`                   | Locate the `pip3` executable path (Windows).     |
 
 <br>
 
 ### Notes
 1. Avoid using the system-installed Python for development (macOS and Linux already come with a Python interpreter used by the operating system), as it may conflict with system operations.
-2. If managing multiple projects with different package versions, consider using virtual environments to isolate dependencies. When a package is installed, it will be stored along side the Python Interpreter, unless a virtual environment is created and activeted.
+2. If managing multiple projects with different package versions, consider using virtual environments to isolate dependencies. When a package is installed, it will be stored alongside the Python interpreter, unless a virtual environment is created and **activated** first.
+3. Inside an activated virtual environment, use the plain `python`/`pip` commands (no `3` suffix needed) — the environment's own interpreter is already the one on `PATH`. `pip` ships bundled with every `venv`/`uv` environment automatically; there's no separate install step.
 
 <br>
 <br>
@@ -215,7 +223,7 @@ sudo rm -f /usr/local/bin/pip3
 Verify removal:
 ```bash
 python3 --version
-where python3
+which -a python3
 ```
 
 ### 2. via Homebrew
@@ -241,7 +249,7 @@ Verify:
 ```bash
 brew list | grep python
 python3 --version
-where python3
+which -a python3
 ```
 
 <br>
@@ -254,26 +262,29 @@ If installed via the Python.org installer:
 2. Locate **Python X.X**.
 3. Click **Uninstall**.
 
-Alternatively, remove it via PowerShell:
+Alternatively, remove it via PowerShell/cmd:
 ```powershell
-Get-Package -Name Python* | Uninstall-Package
+winget uninstall Python.Python.3.x
 ```
 Check Python installation path:
 ```powershell
-where python
+where.exe python
 ```
 Manually remove folders (if necessary):
 ```powershell
 Remove-Item -Recurse -Force "C:\Users\<YourUsername>\AppData\Local\Programs\Python"
 Remove-Item -Recurse -Force "C:\Program Files\Python*"
 ```
+> **Note**: `where` alone is a PowerShell alias for `Where-Object`, not the file-finder — use `where.exe` explicitly, or `Get-Command python` as a PowerShell-native alternative.
 
 <br>
 
 ## 🐧 Linux
 
+> ⚠️ **Warning**: these commands only apply to a Python version **you installed yourself** (e.g. via deadsnakes, `pyenv`, or from source). **Never** run `apt remove`/`purge` on the distro's own `python3` package (usually the lowest version number, e.g. `python3.x-minimal` or matching your OS's default) — `apt` and many system scripts are themselves written in Python and depend on it. Removing it can break your package manager and require a system reinstall.
+
 ### 1. via Package Manager
-For Debian-based systems (Ubuntu, Debian):
+For Debian-based systems (Ubuntu, Debian), removing a version installed from deadsnakes/PPA:
 ```bash
 sudo apt-get remove --purge python3.x
 sudo apt autoremove
@@ -285,7 +296,7 @@ sudo dnf remove python3.x
 Check if Python is still installed:
 ```bash
 python3 --version
-which python3
+which -a python3
 ```
 
 <br>
@@ -294,10 +305,12 @@ which python3
 
 <center><h1>🔄 Switching Between Installed Python Versions</h1></center>
 
-On **macOS/Linux**, update your shell configuration file:
+For a single one-off switch, you can prepend the desired version's **directory** to `PATH` (macOS/Linux):
 ```bash
-export PATH="/usr/local/bin/python3.9:$PATH"
+export PATH="/usr/local/opt/python@3.9/bin:$PATH"
 ```
+> The path must point to the **directory containing the `python3` binary**, not to the binary itself — otherwise `PATH` resolution silently fails and the old version keeps being used.
+
 Apply changes:
 ```bash
 source ~/.zshrc  # or source ~/.bashrc
@@ -308,66 +321,99 @@ python3 --version
 ```
 On **Windows**, modify the system environment variables:
 1. Search **"Environment Variables"**.
-2. Edit **PATH** and move the desired Python version to the top.
+2. Edit **PATH** and move the desired Python version's folder to the top.
 3. Restart the terminal and check with:
 ```powershell
 python --version
 ```
 
-<br>
-<br>
-<br>
+> 💡 **Better approach**: manually juggling `PATH` doesn't scale past two versions and is easy to get wrong. For managing several Python versions side by side, use a dedicated version manager instead — [`pyenv`](https://github.com/pyenv/pyenv) (macOS/Linux) or `uv python install <version>` / `uv python pin <version>` (cross-platform, see the [uv workflow](#-uv-fast-all-in-one) below), which let you install multiple versions and switch per-project without touching `PATH` by hand.
 
+<br>
+<br>
+<br>
 
 <center><h1>🌀 Virtual Environments</h1></center>
 
 Virtual environments allow you to create isolated Python environments for projects, ensuring that dependencies do not conflict with each other or with the system Python installation. This is especially useful when working on multiple projects with different package requirements.
 
+There are three common tools to create them. They solve the same problem with different tradeoffs — pick one per project, don't mix them in the same project.
+
 <br>
 
-## ⭐️ Creating a Virtual Environment
-Navigate to your project directory or specify a desired location:
+## 🧭 Which Tool?
+
+| | `venv` + `pip` | Conda | uv |
+|---|---|---|---|
+| Extra install needed | None (Python stdlib) | Miniconda/Anaconda (~400 MB+) | one-line install script |
+| Can install Python itself | ❌ (needs a Python already present) | ✅ | ✅ |
+| Non-Python binary deps (CUDA, GDAL, ITK, MKL) | ❌ | ✅ (its whole reason to exist) | ❌ |
+| Lockfile for reproducibility | manual (`pip freeze`) | `conda env export` | ✅ automatic `uv.lock` |
+| Speed (create env / install) | baseline | slow | 10–100× faster than pip |
+| Best for | simple pure-Python projects, quick scripts | Data Science / Deep Learning stacks needing compiled non-Python libraries | new projects, CI, anything where speed and reproducibility matter |
+
+<br>
+
+## 📋 Workflow Comparison
+
+The same seven actions, one row per tool — use this as a cheat sheet once you've picked one:
+
+| Step | `venv` + `pip` | Conda | uv |
+|---|---|---|---|
+| 1. Create | `python3 -m venv .venv` | `conda create -n myenv python=3.12` | `uv venv --python 3.12` (or `uv init` for a full project) |
+| 2. Activate | `source .venv/bin/activate` | `conda activate myenv` | `source .venv/bin/activate` |
+| 3. Install a package | `pip install numpy` | `conda install -c conda-forge numpy` | `uv add numpy` |
+| 4. Record dependencies | `pip freeze > requirements.txt` (or `pipreqs .`, see [Deploying Python Code](#-deploying-python-code)) | `conda env export --from-history > environment.yaml` | automatic — written to `uv.lock` on every `uv add` |
+| 5. Reproduce elsewhere | `pip install -r requirements.txt` | `conda env create -f environment.yaml` | `uv sync` |
+| 6. Run code | `python script.py` | `python script.py` | `uv run script.py` (no activation needed) |
+| 7. Delete | `rm -rf .venv` | `conda env remove -n myenv` | `rm -rf .venv` |
+
+> **Convention**: name `venv`/`uv` folders `.venv` (leading dot). It's the tool-standard name auto-detected by VS Code, PyCharm, and `uv` itself, and is easy to exclude with a single `.gitignore` line. Conda environments aren't project folders — they live in a central location and are addressed by `--name`, so this convention doesn't apply to them.
+
+<br>
+
+## 🅰️ `venv` + `pip`
+
+### ⭐️ Creating a Virtual Environment
+Navigate to your project directory and create the environment:
    ```bash
-   python3 -m venv /path/to/project/myvenv
+   python3 -m venv .venv
    ```
    For a specific Python version:
    ```bash
-   python3.x -m venv /path/to/project/myvenv
+   python3.x -m venv .venv
    ```
 
-> **Note**: you can search for any environment on you computer with the bash command `find ~ -name "pyvenv.cfg" 2>/dev/null`. It will output all the paths to the python venv folders on your device. It does not include the system interpreters or venvs created with other tools.
+> **Note**: you can search for any `venv`/`uv` environment on your computer with `find ~ -name "pyvenv.cfg" 2>/dev/null` — it will output all the paths to `pyvenv.cfg` files, marking every `venv`-style folder on your device (`uv` environments also produce this file). It does **not** include system interpreters or Conda environments, which use a different layout.
 
-<br>
-
-## 🏁 Activating a Virtual Environment
+### 🏁 Activating a Virtual Environment
 To use the virtual environment, activate it:
 - **macOS/Linux**:
   ```bash
-  source /path/to/project/myvenv/bin/activate
+  source .venv/bin/activate
   ```
-- **Windows**:
-  ```bash
-  .\path\to\project\myvenv\Scripts\activate
+- **Windows (PowerShell)**:
+  ```powershell
+  .\.venv\Scripts\Activate.ps1
+  ```
+  > If this fails with a script-execution error, PowerShell's execution policy is blocking it. Run once per user: `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned`.
+- **Windows (cmd.exe)**:
+  ```cmd
+  .\.venv\Scripts\activate.bat
   ```
 
-Once activated, the terminal prompt will change to include the name of the virtual environment (e.g., `(myvenv)`):
+Once activated, the terminal prompt will change to include the name of the virtual environment (e.g., `(.venv)`):
 ```bash
-(myvenv) user@machine:~$
+(.venv) user@machine:~$
 ```
 
-<br>
-
-## 📦 Installing Packages in a Virtual Environment
+### 📦 Installing Packages in a Virtual Environment
 With the virtual environment activated, you can use `pip` to install packages. All the packages will be stored inside the active environment and they will not be visible from the other virtual environments:
 ```bash
 pip install <package_name>
 ```
 
-> **Note**: remember to install `pip` after the actiation of the virtual environment.
-
-<br>
-
-## 🛑 Deactivating a Virtual Environment
+### 🛑 Deactivating a Virtual Environment
 When you are done working, deactivate the environment:
 ```bash
 deactivate
@@ -376,51 +422,43 @@ This returns the terminal to the global environment.
 
 <br>
 
-## Why Use Virtual Environments?
-1. **Dependency Management**: Avoid conflicts between dependencies required by different projects.
-2. **Isolation**: Prevent system-wide changes by containing all packages within the virtual environment.
-3. **Reproducibility**: Simplify sharing and collaboration for others to recreate the environment.
+## 🅱️ Conda
 
-By using virtual environments, you maintain clean and organized project setups, reducing the risk of dependency issues.
-
-<br>
-<br>
-<br>
-
-<center><h1>🐉 Anaconda/Miniconda</h1></center>
-
-Anaconda and Miniconda are powerful tools for managing Python environments and dependencies. They allow the creation of isolated environments for different projects without interfering with your system Python installation.
-
-<br>
-
-## 🔑 Differences Between Anaconda and Miniconda
+Anaconda and Miniconda are the two common Conda distributions.
 - **Anaconda**: A larger distribution that includes Python, conda, and many pre-installed data science libraries.
 - **Miniconda**: A minimal installation that includes Python and conda, with fewer pre-installed libraries, providing more flexibility.
 
-<br>
+Reach for Conda specifically when your project needs **non-Python** binary dependencies (CUDA toolkits, GDAL, compiled scientific libraries) that `pip` can't build for you.
 
-## 🔧 Installation Process
+### 🔧 Installation
 
-### macOS/Linux:
+**macOS/Linux:**
 1. Download the miniconda installer:
      ```bash
+     # Linux
      wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
+     # macOS (Apple Silicon)
+     curl -O https://repo.anaconda.com/miniconda/Miniconda3-latest-MacOSX-arm64.sh
+     # macOS (Intel)
+     curl -O https://repo.anaconda.com/miniconda/Miniconda3-latest-MacOSX-x86_64.sh
      ```
    To download a different version check [here](https://repo.anaconda.com/miniconda/) and use:
      ```bash
      # Replace <FILENAME> with the installer Filename you copied from the archive
-     wget https://repo.anaconda.com/miniconda/<FILENAME>
+     curl -O https://repo.anaconda.com/miniconda/<FILENAME>
      ```
 2. Check file integrity:
      ```bash
-     # Replace <FILE_NAME> with the path to your installer
+     # Linux
      sha256sum <FILE_NAME>
+     # macOS
+     shasum -a 256 <FILE_NAME>
      ```
    Compare the hash value you see with the value [here](https://repo.anaconda.com/miniconda/). Remember to verify the hash corresponding to your downloaded miniconda version.
 
 3. Install miniconda:
      ```bash
-     bash ~/Miniconda3-latest-Linux-x86_64.sh
+     bash ~/Miniconda3-latest-<platform>.sh
      ```
    Follow the instruction by pressing `Enter` and write `yes`.
 
@@ -434,15 +472,14 @@ Anaconda and Miniconda are powerful tools for managing Python environments and d
 
 More about the procedure for different systems and shells [here](https://www.anaconda.com/docs/getting-started/miniconda/install#macos-linux-installation:to-download-a-different-version).
 
-
-### Windows:
+**Windows:**
 1. Download the installer from the [official site](https://www.anaconda.com/).
 2. Run the installer and follow the instructions.
-3. During installation, ensure the option to add conda to the system PATH is selected (optional but useful).
+3. Anaconda **recommends against** adding conda to the system PATH during install (it can conflict with other software); use the "Anaconda Prompt" it creates instead, or run `conda init` afterward from that prompt if you want conda available in your regular terminal.
 
 <br>
 
-## 🛜 Installing Miniconda Remotely
+### 🛜 Installing Miniconda Remotely (e.g. on a server)
 
 1. Create a directory for Miniconda:
    ```bash
@@ -452,7 +489,7 @@ More about the procedure for different systems and shells [here](https://www.ana
    ```bash
    wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O ~/miniconda3/miniconda.sh
    ```
-3. Execute the script in non interactive mode, update an existing install if one is already there and install prefix (target directory) set to `~/miniconda3`:
+3. Execute the script in non-interactive mode, updating an existing install if one is already there, with install prefix (target directory) set to `~/miniconda3`:
    ```bash
    bash ~/miniconda3/miniconda.sh -b -u -p ~/miniconda3
    ```
@@ -460,30 +497,31 @@ More about the procedure for different systems and shells [here](https://www.ana
    ```bash
    rm -rf ~/miniconda3/miniconda.sh
    ```
-5. Refresh the shell:
+5. Register conda with your shell (edits `~/.bashrc`/`~/.zshrc` — still requires reopening the terminal or `source`-ing the file to take effect):
    ```bash
-   ~/miniconda3/bin/conda init bash
+   ~/miniconda3/bin/conda init bash   # or: conda init zsh
    ```
 
 <br>
 
-## ⌨️ Basic Conda Commands
+### ⌨️ Basic Conda Commands
 
 | **Purpose**                              | **Command**                               | **Description**                                                                      |
 |---------------------------------------|-------------------------------------------|--------------------------------------------------------------------------------------|
-| **Create an environment**             | `conda create --name myvenv` or `conda create --name myvenv python=3.8`    | Creates a new environment named `myvenv`. If specified, with the Python version.                    |
-| **Activate an environment**           | `conda activate myvenv`                    | Activates the environment `myvenv`.                                                  |
+| **Create an environment**             | `conda create --name myenv` or `conda create --name myenv python=3.12`    | Creates a new environment named `myenv`. ⚠️ **Without `python=`, no Python interpreter is installed in it at all** — always specify a version.  |
+| **Activate an environment**           | `conda activate myenv`                    | Activates the environment `myenv`.                                                  |
 | **Deactivate an environment**         | `conda deactivate`                        | Deactivates the currently active environment.                                       |
-| **Remove an environment**             | `conda env remove --name myvenv`           | Deletes the environment `myvenv` completely.                                         |
-| **Install a package**                 | `conda install <package_name>`            | Installs a specific package into the active environment.                            |
-| **Install `pip`**                 | `conda install pip`            | Installs pip into the active environment.                            |
+| **Remove an environment**             | `conda env remove --name myenv`           | Deletes the environment `myenv` completely.                                         |
+| **Install a package**                 | `conda install -c conda-forge <package_name>` | Installs a specific package into the active environment (`conda-forge` has broader, more current coverage than the `defaults` channel). |
 | **Check conda version**               | `conda --version`                         | Displays the currently installed version of conda.                                  |
 | **List installed packages**           | `conda list`                              | Lists all packages installed in the active environment.                             |
 | **List all environments**             | `conda env list`                          | Displays all available environments and their locations.                            |
 
+> `pip` already ships inside every Conda environment that specifies `python=`, no separate `conda install pip` step needed in that case.
+
 <br>
 
-## 🪛 Managing Conda Base Environment
+### 🪛 Managing Conda Base Environment
 
 By default, the `base` environment in Conda is activated whenever you open a new terminal.
 
@@ -498,7 +536,7 @@ Here are commands to manage this behavior:
     ```bash
     conda config --set auto_activate_base false
     ```
-    This ensures that Conda doesn’t activate the `base` environment automatically in new terminals.
+    This ensures that Conda doesn't activate the `base` environment automatically in new terminals.
 
 - **Show or Hide the `(base)` Prefix**: You can customize whether the `(base)` prefix appears in your terminal prompt. To hide the prefix:
     ```bash
@@ -510,12 +548,86 @@ Here are commands to manage this behavior:
     ```
 
 <br>
+
+## 🅾️ uv (fast, all-in-one)
+
+[`uv`](https://docs.astral.sh/uv/) is a newer, Rust-based tool from Astral that replaces the combination of `pyenv` + `venv` + `pip` + `pip-tools` with a single, much faster binary. It manages Python versions, virtual environments, and dependencies with an automatic lockfile.
+
+### 🔧 Installation
+```bash
+# macOS/Linux
+curl -LsSf https://astral.sh/uv/install.sh | sh
+# macOS (Homebrew alternative)
+brew install uv
+```
+```powershell
+# Windows (PowerShell)
+powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
+```
+
+### 🐍 Managing Python Versions
+`uv` can download and manage Python interpreters itself — no separate `pyenv` needed:
+```bash
+uv python install 3.12      # download and install a Python version
+uv python list               # list installed/available versions
+uv python pin 3.12           # pin the version for the current project
+```
+
+### 📁 Starting a Project
+```bash
+uv init my_project           # scaffolds pyproject.toml, .python-version, .venv/
+cd my_project
+```
+This creates a `pyproject.toml` — the modern, PEP 621 config file that replaces `requirements.txt` as the source of truth for dependencies (see also [`PyPI-Guide.md`](./PyPI-Guide.md) §5 for packaging with `pyproject.toml`).
+
+For an existing project, `uv venv` alone just creates a bare `.venv` without the project scaffolding.
+
+### 📦 Managing Dependencies
+```bash
+uv add numpy                 # adds to pyproject.toml, updates uv.lock, installs it
+uv add --dev pytest          # dev-only dependency
+uv remove numpy              # removes it from both files
+uv sync                      # installs exactly what uv.lock specifies (reproducible)
+```
+
+### ▶️ Running Code
+```bash
+uv run script.py             # runs inside the project's env — no manual activation needed
+uv run python                # drop into a REPL with the project's env
+```
+`uv run` transparently syncs the environment to match the lockfile before every run, so it's always in sync — you don't have to remember to `uv sync` yourself.
+
+### 🧰 One-off Tools
+```bash
+uvx ruff check .             # run a tool in a throwaway env, without installing it into your project
+```
+`uvx` is `uv`'s equivalent of `pipx`.
+
+### 🔁 Compatibility with `pip`/`requirements.txt`
+If you're not ready to move to `pyproject.toml`, `uv` also offers a drop-in faster replacement for the classic `pip` workflow:
+```bash
+uv venv .venv                          # same as python3 -m venv .venv, much faster
+source .venv/bin/activate
+uv pip install -r requirements.txt     # same as pip install -r requirements.txt
+uv pip compile requirements.in -o requirements.txt   # pip-tools-style lockfile generation
+```
+
+<br>
+
+## Why Use Virtual Environments?
+1. **Dependency Management**: Avoid conflicts between dependencies required by different projects.
+2. **Isolation**: Prevent system-wide changes by containing all packages within the virtual environment.
+3. **Reproducibility**: Simplify sharing and collaboration for others to recreate the environment.
+
+By using virtual environments, you maintain clean and organized project setups, reducing the risk of dependency issues.
+
+<br>
 <br>
 <br>
 
 <center><h1>📦 Deploying Python Code</h1></center>
 
-When sharing or deploying Python projects, it is essential to specify dependencies. This ensures that anyone using the code has the correct libraries installed.
+When sharing or deploying Python projects, it is essential to specify dependencies. This ensures that anyone using the code has the correct libraries installed. This chapter covers the **detailed generation** of dependency files — see the [Workflow Comparison](#-workflow-comparison) table above for the one-liner used per tool.
 
 <br>
 
@@ -615,7 +727,7 @@ pigar generate
 # Specify a different path
 pigar generate -f /path/to/requirements.txt
 
-# Include development dependencies
+# Include per-package source comments (see example below)
 pigar generate --with-referenced-comments
 ```
 
@@ -624,7 +736,6 @@ pigar generate --with-referenced-comments
 - Provides comments showing where each package is used
 - Can detect packages that are imported but not installed
 - Can find packages installed but not imported
-- Supports Python 2 and Python 3
 
 **Additional Commands:**
 ```bash
@@ -665,6 +776,7 @@ In summary:
 - **Use `pip freeze`** when you want an exact snapshot of your working environment
 - **Use `pipreqs`** for clean project deployment with minimal dependencies
 - **Use `pigar`** when you want detailed tracking of where packages are used and need additional package management features
+- **Use `uv add`** (see the [uv workflow](#-uv-fast-all-in-one) above) if starting fresh — it maintains `pyproject.toml`/`uv.lock` automatically as you go, so there's nothing to "generate" after the fact
 
 <br>
 
@@ -682,6 +794,8 @@ matplotlib>=3.0       # Version 3.0 or later
 pandas~=1.3.0         # Compatible release (>=1.3.0, <1.4.0)
 requests              # Any version (not recommended for production)
 ```
+
+> Note: `requirements.txt` lists **package** dependencies only — it is not the place to pin the Python version itself. To require a Python version range, use `requires-python` in `pyproject.toml` (see [`PyPI-Guide.md`](./PyPI-Guide.md) §5), or `.python-version` for `pyenv`/`uv`.
 
 **Version Specifier Guide:**
 - `==` : Exact version
@@ -723,8 +837,8 @@ conda env update -f environment.yaml
 ```yaml
 name: my_project_env
 channels:
-  - defaults
   - conda-forge
+  - defaults
 dependencies:
   - python=3.10
   - numpy=1.24.3
@@ -775,10 +889,11 @@ Regularly update your dependencies to patch security vulnerabilities:
 # Check for outdated packages
 pip list --outdated
 
-# Use tools like safety to check for known vulnerabilities
-pip install safety
-safety check -r requirements.txt
+# Use pip-audit (PyPA-maintained, free, no account needed) to check for known vulnerabilities
+pip install pip-audit
+pip-audit -r requirements.txt
 ```
+> `safety check`/`safety scan` is a well-known alternative, but the `safety` CLI has moved toward a paid/account-gated model — `pip-audit` is the actively free, PyPA-endorsed option. If you use `uv`, `uv audit` covers the same need natively.
 
 <br>
 <br>
@@ -812,13 +927,31 @@ Jupyter Notebooks and JupyterLab are popular tools for interactive programming i
 Launch Jupyter Notebook with:
 ```bash
 cd /path/to/your/project
-source myvenv/bin/activate
+source .venv/bin/activate
 jupyter-notebook
 ```
-This starts a local web server and opens the Jupyter interface in your default browser, allowing you to create, edit, and run Python files. The active environment when Jupyter Lab is launched will be the environment active into your project.
+This starts a local web server and opens the Jupyter interface in your default browser, allowing you to create, edit, and run Python files.
 
 <img src="./images/Python-setup-tutorial/jupyter-notebook-1.png" width=500px> <br>
 <img src="./images/Python-setup-tutorial/jupyter-notebook-2.png" width=500px>
+
+<br>
+
+## 🧬 Kernels: Why the Active Environment Isn't Automatically Used
+
+Launching `jupyter-notebook`/`jupyter-lab` from an activated environment only makes that environment's packages available **if Jupyter itself was installed inside it**. A notebook doesn't run against "whatever env launched the server" — it runs against a **kernel**, a registered pointer to a specific Python interpreter, chosen independently from the **Kernel** menu inside the notebook UI.
+
+To make an environment selectable as a kernel from any Jupyter install:
+```bash
+source .venv/bin/activate           # or conda activate myenv / uv run —
+pip install ipykernel               # (uv: uv add --dev ipykernel)
+python -m ipykernel install --user --name .venv --display-name "Python (.venv)"
+```
+Now "Python (.venv)" appears in the Kernel menu regardless of which environment launched the Jupyter server itself. List/remove registered kernels with:
+```bash
+jupyter kernelspec list
+jupyter kernelspec uninstall <name>
+```
 
 <br>
 
@@ -844,10 +977,10 @@ This starts a local web server and opens the Jupyter interface in your default b
 Launch Jupyter Lab with:
 ```bash
 cd /path/to/your/project
-source myvenv/bin/activate
+source .venv/bin/activate
 jupyter-lab
 ```
-This starts a local web server and opens the Jupyter interface in your default browser, allowing you to create, edit, and run Python files. The active environment when Jupyter Lab is launched will be the environment active into your project.
+This starts a local web server and opens the Jupyter interface in your default browser, allowing you to create, edit, and run Python files. As above, use the **Kernel** menu to pick the environment you actually want to run against.
 
 <img src="./images/Python-setup-tutorial/jupyter-lab-1.png" width=500px>
 <br>
@@ -874,7 +1007,7 @@ Follow the tutorial: [PyCharm Download](https://www.jetbrains.com/pycharm/downlo
 
 ### for Linux:
 1. Navigate to the Directory:
-   - Ensure you’re in the directory where the `.tar.gz` file is located. Use:
+   - Ensure you're in the directory where the `.tar.gz` file is located. Use:
      ```bash
      cd /path/to/directory/
      ```
@@ -979,7 +1112,7 @@ Follow the tutorial: [PyCharm Download](https://www.jetbrains.com/pycharm/downlo
    - Check **New environment** using **Virtualenv** or **Conda**.
    - Configure the **Base Interpreter** (choose a Python executable).
    - Optionally, check **Inherit global site-packages** to access globally installed packages in the virtual environment.
-3. Click **Create**. PyCharm will set up the virtual environment in the project directory (e.g., `my_project/venv`).
+3. Click **Create**. PyCharm will set up the virtual environment in the project directory (e.g., `my_project/.venv`).
 
 <img src="./images/Python-setup-tutorial/pycharm-new-env-python.png" width=500px>
 <br>
@@ -991,11 +1124,11 @@ Follow the tutorial: [PyCharm Download](https://www.jetbrains.com/pycharm/downlo
 PyCharm automatically activates the virtual environment in its terminal. To manually activate it in the terminal:
 - **macOS/Linux**:
   ```bash
-  source /path/to/project/venv/bin/activate
+  source /path/to/project/.venv/bin/activate
   ```
 - **Windows**:
-  ```bash
-  .\path\to\project\venv\Scripts\activate
+  ```powershell
+  .\path\to\project\.venv\Scripts\Activate.ps1
   ```
 Install packages in the activated virtual environment using the **Terminal** tab or **PyCharm's package manager**.
 
@@ -1029,45 +1162,51 @@ Install packages in the activated virtual environment using the **Terminal** tab
 Follow the tutorial: [Visual Studio Code Download](https://code.visualstudio.com/download)
 
 ### for Linux:
-1. Navigate to the Directory:
-   - Ensure you’re in the directory where the `.rpm` file is located. Use:
+Debian/Ubuntu (recommended — installs via `apt` and stays updated through it):
+```bash
+sudo apt update
+sudo apt install wget gpg
+wget -qO- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > packages.microsoft.gpg
+sudo install -D -o root -g root -m 644 packages.microsoft.gpg /usr/share/keyrings/packages.microsoft.gpg
+sudo sh -c 'echo "deb [arch=amd64,arm64,armhf signed-by=/usr/share/keyrings/packages.microsoft.gpg] https://packages.microsoft.com/repos/code stable main" > /etc/apt/sources.list.d/vscode.list'
+sudo apt update
+sudo apt install code
+```
+Fedora/RHEL (`.rpm`-based) — same package repo, or a manual download:
+1. Navigate to the directory where the `.rpm` file is located:
      ```bash
      cd /path/to/directory/
      ```
-    Replace `/path/to/directory/` with the actual directory path where your `.rpm` files are located. <br>
     [Download Visual Studio Code `.rpm` here](https://code.visualstudio.com/Download)
-
 2. Install the `.rpm` Package:
-   - Run the following command to install Visual Studio Code:
      ```bash
      sudo rpm -ivh code-<version>.rpm
      ```
     Replace `<version>` with the actual version you downloaded.
 
-3. Verify Installation:
-   - Once installed, you can launch Visual Studio Code by typing:
-     ```bash
-     code
-     ```
+Verify Installation (any distro):
+   ```bash
+   code --version
+   ```
 <br>
 
 
 ## 1️⃣ Creating a Project with a Virtual Environment
 1. **Create a Virtual Environment** in your project directory:
    ```bash
-   python3 -m venv myvenv
+   python3 -m venv .venv
    ```
 2. In **Visual Studio Code**, open the Command Palette (Ctrl+Shift+P or Cmd+Shift+P).
 3. Search for **Python: Select Interpreter**.
-4. Select the interpreter for your virtual environment (e.g., `/myvenv/bin/python3`).
+4. Select the interpreter for your virtual environment (e.g., `./.venv/bin/python3`) — VS Code auto-detects a `.venv` folder in the project root and lists it at the top.
 5. When you open a new terminal in VS Code, activate the virtual environment:
 - **macOS/Linux**:
   ```bash
-  source myvenv/bin/activate
+  source .venv/bin/activate
   ```
 - **Windows**:
-  ```bash
-  .\myvenv\Scripts\activate
+  ```powershell
+  .\.venv\Scripts\Activate.ps1
   ```
   Now your code will be executed with the activated environment
 
