@@ -4,18 +4,6 @@ A comprehensive guide for working on shared projects with Git, focusing on prope
 
 <br>
 
-## 📋 Table of Contents
-1. [The Basic Workflow](#the-basic-workflow)
-2. [Initial Setup](#initial-setup)
-3. [Daily Workflow Step-by-Step](#daily-workflow-step-by-step)
-4. [Understanding Branches](#understanding-branches)
-5. [Handling Merge Conflicts](#handling-merge-conflicts)
-6. [Best Practices](#best-practices)
-7. [Common Scenarios](#common-scenarios)
-8. [Troubleshooting](#troubleshooting)
-
-<br>
-
 ## 🔄 The Basic Workflow
 
 Here's the **golden rule** for collaborative Git work:

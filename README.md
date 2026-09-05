@@ -17,6 +17,7 @@ This project is designed to help newcomers learn various topics about Python pro
 - [🛠️ Python Project Guide](./Python-Project-Guide.md)
 - [⚡ PyTorch Lightning Guide](./PyTorch-Lightning-Guide.md)
 - [🤝 Collaborative Git Workflow Guide](./Git.md)
+- [📦 Git LFS Guide](./Git-LFS.md)
 
 
 ## 🤝 Contribution
